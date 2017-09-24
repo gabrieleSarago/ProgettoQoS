@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="base_simulator/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/base_simulator"/>
+	<classpathentry kind="lib" path="dist/lib/jdom-2.0.5.jar"/>
+	<classpathentry kind="lib" path="dist/simulatore_PA.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/jdom-2.0.5-contrib.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/jdom-2.0.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/jdom-2.0.5-junit.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/jdom-2.0.5-sources.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/jdom-2.0.5.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/lib/jaxen-1.1.6.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.5/lib/xml-apis.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="org.pushingpixels.trident_1.2.0.v20100204-1500.jar" sourcepath="org.pushingpixels.trident.source_1.2.0.v20100204-1500.jar"/>
+	<classpathentry kind="lib" path="org.eclipse.e4.xwt_0.9.1.SNAPSHOT.jar" sourcepath="org.eclipse.e4.xwt.source_0.9.1.SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="org.eclipse.e4.xwt.forms_0.9.1.SNAPSHOT.jar" sourcepath="org.eclipse.e4.xwt.forms.source_0.9.1.SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.eclipse.core.databinding_1.4.1.v20130515-1857.jar" sourcepath="/Applications/eclipse/plugins/org.eclipse.core.databinding.source_1.4.1.v20130515-1857.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.eclipse.core.databinding.observable_1.4.1.v20130515-1857.jar" sourcepath="/Applications/eclipse/plugins/org.eclipse.core.databinding.observable.source_1.4.1.v20130515-1857.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.eclipse.jface.databinding_1.6.200.v20130515-1857.jar" sourcepath="/Applications/eclipse/plugins/org.eclipse.jface.databinding.source_1.6.200.v20130515-1857.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

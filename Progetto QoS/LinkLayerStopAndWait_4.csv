@@ -1,0 +1,250 @@
+15005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:0;NEXT_HOP:2;
+15016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:0;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+15017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:0;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+15027.441599999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:0/ n:0;
+15027.441599999998;4;Invio Messaggio;hello_pckt;ARQ_ID:1;NEXT_HOP:3;
+15029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:1/ n:1;
+15029.8832;4;Invio Messaggio;LSA;ARQ_ID:2;NEXT_HOP:2;
+15027.441599999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:2/ n:2;
+15027.441599999998;4;Invio Messaggio;LSA;ARQ_ID:3;NEXT_HOP:3;
+15029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:3/ n:3;
+15016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+15017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+16005.0;4;Invio Messaggio;LSA;ARQ_ID:4;NEXT_HOP:2;
+16027.441599999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:4/ n:4;
+18017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:8;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+18016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:10;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+20005.0;4;Invio Messaggio;LSA;ARQ_ID:5;NEXT_HOP:2;
+20017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:12;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+20027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:5/ n:5;
+20027.4416;4;Invio Messaggio;LSA;ARQ_ID:6;NEXT_HOP:3;
+20029.883199999997;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:6/ n:6;
+20016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:13;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+30005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:7;NEXT_HOP:2;
+30017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:15;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+30027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:7/ n:7;
+30027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:8;NEXT_HOP:3;
+30029.883199999997;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:8/ n:8;
+30016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:16;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+45005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:9;NEXT_HOP:2;
+45017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:944;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+45027.441600000006;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:9/ n:9;
+45027.441600000006;4;Invio Messaggio;hello_pckt;ARQ_ID:10;NEXT_HOP:3;
+45029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:10/ n:10;
+45016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:945;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+60005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:11;NEXT_HOP:2;
+60017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1089;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+60027.441600000006;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:11/ n:11;
+60027.441600000006;4;Invio Messaggio;hello_pckt;ARQ_ID:12;NEXT_HOP:3;
+60029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:12/ n:12;
+60016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1090;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+75005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:13;NEXT_HOP:2;
+75017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1234;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+75027.44159999999;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:13/ n:13;
+75027.44159999999;4;Invio Messaggio;hello_pckt;ARQ_ID:14;NEXT_HOP:3;
+75029.88320000001;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:14/ n:14;
+75016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1235;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+90005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:15;NEXT_HOP:2;
+90017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1380;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+90027.44159999999;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:15/ n:15;
+90027.44159999999;4;Invio Messaggio;hello_pckt;ARQ_ID:16;NEXT_HOP:3;
+90029.88320000001;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:16/ n:16;
+90016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1381;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+105005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:17;NEXT_HOP:2;
+105017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1526;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+105027.44159999999;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:17/ n:17;
+105027.44159999999;4;Invio Messaggio;hello_pckt;ARQ_ID:18;NEXT_HOP:3;
+105029.88320000001;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:18/ n:18;
+105016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1527;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+120005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:19;NEXT_HOP:2;
+120017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1671;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+120027.44159999999;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:19/ n:19;
+120027.44159999999;4;Invio Messaggio;hello_pckt;ARQ_ID:20;NEXT_HOP:3;
+120029.88320000001;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:20/ n:20;
+120016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1672;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+135005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:21;NEXT_HOP:2;
+135017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:1826;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+135027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:21/ n:21;
+135027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:22;NEXT_HOP:3;
+135029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:22/ n:22;
+135016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:1827;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+150005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:23;NEXT_HOP:2;
+150017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2009;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+150027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:23/ n:23;
+150027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:24;NEXT_HOP:3;
+150029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:24/ n:24;
+150016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2010;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+165005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:25;NEXT_HOP:2;
+165017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2192;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+165027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:25/ n:25;
+165027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:26;NEXT_HOP:3;
+165029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:26/ n:26;
+165016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2193;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+180005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:27;NEXT_HOP:2;
+180017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2375;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+180027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:27/ n:27;
+180027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:28;NEXT_HOP:3;
+180029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:28/ n:28;
+180016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2376;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+195005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:29;NEXT_HOP:2;
+195017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2558;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+195027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:29/ n:29;
+195027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:30;NEXT_HOP:3;
+195029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:30/ n:30;
+195016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2559;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+210005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:31;NEXT_HOP:2;
+210017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2741;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+210027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:31/ n:31;
+210027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:32;NEXT_HOP:3;
+210029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:32/ n:32;
+210016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2742;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+225005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:33;NEXT_HOP:2;
+225017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:2924;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+225027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:33/ n:33;
+225027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:34;NEXT_HOP:3;
+225029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:34/ n:34;
+225016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:2925;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+240005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:35;NEXT_HOP:2;
+240017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3107;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+240027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:35/ n:35;
+240027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:36;NEXT_HOP:3;
+240029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:36/ n:36;
+240016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3108;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+255005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:37;NEXT_HOP:2;
+255017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3290;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+255027.44160000002;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:37/ n:37;
+255027.44160000002;4;Invio Messaggio;hello_pckt;ARQ_ID:38;NEXT_HOP:3;
+255029.88319999998;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:38/ n:38;
+255016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3291;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+270005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:39;NEXT_HOP:2;
+270017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3453;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+270027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:39/ n:39;
+270027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:40;NEXT_HOP:3;
+270029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:40/ n:40;
+270016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3454;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+285005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:41;NEXT_HOP:2;
+285017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3599;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+285027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:41/ n:41;
+285027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:42;NEXT_HOP:3;
+285029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:42/ n:42;
+285016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3600;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+300005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:43;NEXT_HOP:2;
+300017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3745;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+300027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:43/ n:43;
+300027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:44;NEXT_HOP:3;
+300029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:44/ n:44;
+300016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3746;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+315005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:45;NEXT_HOP:2;
+315017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:3890;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+315027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:45/ n:45;
+315027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:46;NEXT_HOP:3;
+315029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:46/ n:46;
+315016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:3891;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+330005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:47;NEXT_HOP:2;
+330017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4035;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+330027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:47/ n:47;
+330027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:48;NEXT_HOP:3;
+330029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:48/ n:48;
+330016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4036;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+345005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:49;NEXT_HOP:2;
+345017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4181;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+345027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:49/ n:49;
+345027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:50;NEXT_HOP:3;
+345029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:50/ n:50;
+345016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4182;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+360005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:51;NEXT_HOP:2;
+360017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4262;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+360027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:51/ n:51;
+360027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:52;NEXT_HOP:3;
+360029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:52/ n:52;
+360016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4263;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+375005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:53;NEXT_HOP:2;
+375017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4265;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+375027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:53/ n:53;
+375027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:54;NEXT_HOP:3;
+375029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:54/ n:54;
+375016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4266;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+390005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:55;NEXT_HOP:2;
+390017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4268;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+390027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:55/ n:55;
+390027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:56;NEXT_HOP:3;
+390029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:56/ n:56;
+390016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4269;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+405005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:57;NEXT_HOP:2;
+405017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4271;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+405027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:57/ n:57;
+405027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:58;NEXT_HOP:3;
+405029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:58/ n:58;
+405016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4272;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+420005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:59;NEXT_HOP:2;
+420017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4274;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+420027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:59/ n:59;
+420027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:60;NEXT_HOP:3;
+420029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:60/ n:60;
+420016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4275;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+435005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:61;NEXT_HOP:2;
+435017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4277;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+435027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:61/ n:61;
+435027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:62;NEXT_HOP:3;
+435029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:62/ n:62;
+435016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4278;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+450005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:63;NEXT_HOP:2;
+450017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4280;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+450027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:63/ n:63;
+450027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:64;NEXT_HOP:3;
+450029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:64/ n:64;
+450016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4281;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+465005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:65;NEXT_HOP:2;
+465017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4283;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+465027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:65/ n:65;
+465027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:66;NEXT_HOP:3;
+465029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:66/ n:66;
+465016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4284;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+480005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:67;NEXT_HOP:2;
+480017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4286;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+480027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:67/ n:67;
+480027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:68;NEXT_HOP:3;
+480029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:68/ n:68;
+480016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4287;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+495005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:69;NEXT_HOP:2;
+495017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4289;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+495027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:69/ n:69;
+495027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:70;NEXT_HOP:3;
+495029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:70/ n:70;
+495016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4290;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+510005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:71;NEXT_HOP:2;
+510017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4292;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+510027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:71/ n:71;
+510027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:72;NEXT_HOP:3;
+510029.88320000004;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:72/ n:72;
+510016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4293;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+525005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:73;NEXT_HOP:2;
+525017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4295;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+525027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:73/ n:73;
+525027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:74;NEXT_HOP:3;
+525029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:74/ n:74;
+525016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4296;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+540005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:75;NEXT_HOP:2;
+540017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4298;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+540027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:75/ n:75;
+540027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:76;NEXT_HOP:3;
+540029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:76/ n:76;
+540016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4299;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+555005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:77;NEXT_HOP:2;
+555017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4301;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+555027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:77/ n:77;
+555027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:78;NEXT_HOP:3;
+555029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:78/ n:78;
+555016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4302;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+570005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:79;NEXT_HOP:2;
+570017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4304;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+570027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:79/ n:79;
+570027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:80;NEXT_HOP:3;
+570029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:80/ n:80;
+570016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4305;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ
+585005.0;4;Invio Messaggio;hello_pckt;ARQ_ID:81;NEXT_HOP:2;
+585017.4416;Nodo :4;Genero Messaggio ACK;ARQ ID..:4307;Verso Nodo..:3;Tipo Messaggio.:ACK_ARQ
+585027.4416;ACK Ricevuto da..:4;Ricevuto Messaggio da :2;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:81/ n:81;
+585027.4416;4;Invio Messaggio;hello_pckt;ARQ_ID:82;NEXT_HOP:3;
+585029.8832;ACK Ricevuto da..:4;Ricevuto Messaggio da :3;Tipo Messaggio:ACK_ARQ;ARQ_ID -> m:82/ n:82;
+585016.2208;Nodo :4;Genero Messaggio ACK;ARQ ID..:4308;Verso Nodo..:2;Tipo Messaggio.:ACK_ARQ

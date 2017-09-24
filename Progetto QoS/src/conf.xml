@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<root>
+    <project>
+        <descrizione>
+            Progetto sample per il simulatore jNET by culture group of University of Calabria
+        </descrizione>
+    </project>
+<canali>    
+      <canale id="0" tipo="802.11p" capacita="6000000" dim_pacchetto = "1526" tempo_propagazione = "1"></canale>
+</canali>
+
+<!--
+        type : Specializzazione applicazione
+        rate : parametro ingresso applicazione
+        TON : periodo di ON in caso di burst (Non ancora utilizato)
+        TOFF: periodo di off in caso di burstness  (Non ancora utilizato)
+        port: Porta Applicazione livello trasporto
+        size: Dimensione dei dati da trasferire in MegaByte
+        pckt_size : dimensione del pacchetto a livello trasporto
+        start : inizio applicazione in ms
+        dest: destinazione del flusso da dare id di un nodo host
+        file : Se indicato e il simulatore identifica il file diventa il dato da trasferire 
+               Il campo size non sarà più utilizzato dal simulatore ma sarà sostituito con il valore reale del file
+        payload : non ancora utilizzato
+        availableSpaceForSession : Dimensione della finestra di ricezione in numero di MSS
+-->
+
+<!--        
+        <application type="simple_source_tcp" rate="100.0" TON="100" TOFF="0" port="1234" dest="1" size="4" pckt_size="1460.0" availableSpaceForSession = "50" start="60000" 
+            payload="Trasferimento file" file="null">             
+        </application> 
+--> 
+    
+    <router id = "R1">
+		<base_station>B1</base_station>
+		<base_station>B2</base_station>
+		<base_station>B11</base_station>
+		<base_station>B12</base_station>
+    </router>
+    <router id = "R2">
+    	<base_station>B21</base_station>
+    	<base_station>B31</base_station>
+   	</router>
+    <router id = "R3">
+		<base_station>B41</base_station>
+		<base_station>B42</base_station>
+		<base_station>B43</base_station>
+    </router>
+    <router id = "R4">
+		<base_station>B13</base_station>
+		<base_station>B14</base_station>
+		<base_station>B15</base_station>
+		<base_station>B4</base_station>
+		<base_station>B5</base_station>
+    </router>
+    <router id = "R5">
+		<base_station>B3</base_station>
+		<base_station>B22</base_station>
+		<base_station>B23</base_station>
+		<base_station>B24</base_station>
+    </router>
+    <router id = "R6">
+		<base_station>B32</base_station>
+		<base_station>B33</base_station>
+		<base_station>B34</base_station>
+		<base_station>B35</base_station>
+    </router>
+    <router id = "R7">
+		<base_station>B36</base_station>
+		<base_station>B37</base_station>
+		<base_station>B44</base_station>
+		<base_station>B45</base_station>
+		<base_station>B46</base_station>
+		<base_station>B47</base_station>
+    </router>
+    <router id = "R8">
+		<base_station>B25</base_station>
+		<base_station>B26</base_station>
+		<base_station>B27</base_station>
+    </router>
+    <router id = "R9">
+		<base_station>B16</base_station>
+		<base_station>B17</base_station>
+		<base_station>B18</base_station>
+		<base_station>B6</base_station>
+		<base_station>B7</base_station>
+		<base_station>B8</base_station>
+    </router>
+    <router id = "R10">
+		<base_station>B19</base_station>
+		<base_station>B9</base_station>
+		<base_station>B10</base_station>
+    </router>
+    <router id = "R11">
+		<base_station>B28</base_station>
+		<base_station>B29</base_station>
+		<base_station>B30</base_station>
+		<base_station>B20</base_station>
+    </router>
+    <router id = "R12">
+		<base_station>B48</base_station>
+		<base_station>B49</base_station>
+		<base_station>B50</base_station>
+		<base_station>B38</base_station>
+		<base_station>B39</base_station>
+		<base_station>B40</base_station>
+    </router>
+    <first_router id = "F1">
+    	<r>R1</r>
+    	<r>R2</r>
+    	<r>R3</r>
+    </first_router>
+    <first_router id = "F2">
+    	<r>R4</r>
+    	<r>R5</r>
+    	<r>R6</r>
+    </first_router>
+    <first_router id = "F3">
+    	<r>R7</r>
+    	<r>R8</r>
+    	<r>R9</r>
+    </first_router>
+    <first_router id = "F4">
+    	<r>R10</r>
+    	<r>R11</r>
+    	<r>R12</r>
+    </first_router>
+    
+    <gateway_router id = "C1">
+    	<fr>F1</fr>
+    	<fr>F2</fr>
+    	<fr>F3</fr>
+    	<fr>F4</fr>
+    </gateway_router>
+
+    <!-- generatore di veicoli -->
+    <!-- gateway del nodo generato 
+         nodo_ingresso = il nodo dal quale il veicolo partirà
+         nodo_uscita   = nodo dal quale il veicolo uscirà dalla rete
+         exitAt = istante iniziale dal quale il generatore inizierà a fare pull di veicoli all'interno del sistema
+         generation rate = rate di generazione espresso in veicoli al minuto
+    -->
+    <!-- bisogna creare più pozzi che generano mobile host-->
+    <pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="100" showUI = "0">
+    </pozzo>
+    
+    
+    
+<!--    
+    <router id="2" gateway="4" net_size="5">
+        <protocol tipo="OSPF" TTL="1" ROUTING="auto"></protocol>
+             
+        <interfaces>
+            <interface id="0" IP="192.168.2.1/30" dest="4" canale="1" metrica="1.0"></interface> 
+            <interface id="1" IP="192.168.1.1/26" dest="0" canale="0" metrica="1.0"></interface> 
+            <interface id="2" IP="192.168.2.9/30" dest="3" canale="4" metrica="1.0"></interface> 
+        </interfaces>
+    </router>
+           
+    <router id="3" gateway="4" net_size="5">
+        <protocol tipo="OSPF" TTL="1" ROUTING="auto"></protocol>
+        <interfaces>
+            <interface id="0" IP="192.168.2.5/30" dest="4" canale="3" metrica="1.0"></interface> 
+            <interface id="1" IP="192.168.1.65/26" dest="1" canale="2" metrica="1.0"></interface>
+            <interface id="2" IP="192.168.2.10/30" dest="3" canale="4" metrica="1.0"></interface>
+        </interfaces>
+    </router>
+    
+    <router id="4" gateway="3" net_size="5">
+        <protocol tipo="OSPF" TTL="1" ROUTING="auto"></protocol>
+             
+            <interfaces>
+                <interface id="0" IP="192.168.2.2/30" dest="2" canale="1" metrica="1.0"></interface> 
+                <interface id="1" IP="192.168.2.6/30" dest="3" canale="3" metrica="1.0"></interface> 
+            </interfaces>
+        </router>
+    -->    
+    <network>
+        <!--         tipo="full" indica un ramo orientato  -->
+        <ramo metrica="1.0" start="1" end="3" tipo="full"></ramo>  <!--PUNTO PUNTO (1<-(1)->3) -->
+        <ramo metrica="1.0" start="2" end="4" tipo="full"></ramo>  <!--PUNTO PUNTO (2<-(1)->4) -->
+        <ramo metrica="1.0" start="3" end="4" tipo="full"></ramo>  <!--PUNTO PUNTO (3<-(1)->4) -->
+    </network>
+</root>
