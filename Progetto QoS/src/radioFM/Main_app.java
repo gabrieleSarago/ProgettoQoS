@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFileChooser;
 
@@ -31,12 +32,18 @@ import base_simulator.layers.LinkLayer;
  * @author afsantamaria
  */
 public class Main_app extends javax.swing.JFrame {
+	
+	private static final long serialVersionUID = -2575339233777650474L;
 
-    private static scheduler s;
+	private static scheduler s;
 
     private static void init_sim_parameters() {
-        s = new scheduler(600000, false);
+    	//100 minuti di simulazione - ogni secondo corrisponde a 100 secondi
+    	//quindi 100 minuti sono simulati in 60 secondi (60000 secondi = 100 minuti , 60000/100 = 60 secondi)
+        s = new scheduler(6000000, false);
     }
+    
+    private String[] stazioni = {"RDS","RTL 102.5", "RAI RADIO 1", "RAI RADIO 2", "RAI RADIO 3", "RADIO DEEJAY"};
 
     private String conf_file_path;
 
@@ -294,7 +301,8 @@ public class Main_app extends javax.swing.JFrame {
 
     MobilityMap roadMap;
 
-    private boolean startParsing(File xmlFile) {
+    @SuppressWarnings("rawtypes")
+	private boolean startParsing(File xmlFile) {
         roadMap = new MobilityMap();
         SAXBuilder saxBuilder = new SAXBuilder();
         boolean res = false;
@@ -535,8 +543,13 @@ public class Main_app extends javax.swing.JFrame {
                     LinkLayer ll = new LinkLayer(s, 5.0);
                     waveNetLayer nl = new waveNetLayer(s, 5.0, grafo,showUI);
                     waveFSCTPTransportLayer tl = new waveFSCTPTransportLayer(s, 5.0);
-
-                    MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway);
+                    
+                    //Scelta stazione radio casuale
+                    int i = (new Random()).nextInt(stazioni.length);
+                    String station_name = stazioni[i];
+                    System.out.println(station_name);
+                    
+                    MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, station_name);
 
                     nh.setMappa(roadMap);
                     nh.setNodo_ingresso(nodo_ingresso);

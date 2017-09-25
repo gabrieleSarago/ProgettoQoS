@@ -162,7 +162,8 @@ public class scheduler implements Runnable{
         
         //Solo aggiornamento interfaccia grafica
         while(buffer.isEmpty() && orologio.getCurrent_Time()<=max_Time){
-            this.orologio.shifta(10000);
+            //Ogni secondo corrisponde a 100 secondi di simulazione
+        	this.orologio.shifta(100000);
 
         }
         

@@ -27,6 +27,7 @@ public class Router {
 	}
 	
 	public void addMobileHost(int id_mh, String stazione) {
+		System.out.println("mobile host = "+id_mh+" stazione scelta = "+stazione);
 		routes.put(id_mh, stazione);
 	}
 	

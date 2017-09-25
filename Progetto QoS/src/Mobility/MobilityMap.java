@@ -6,7 +6,6 @@
 package Mobility;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import org.graphstream.graph.Edge;
@@ -395,12 +394,13 @@ public class MobilityMap {
         cityRoadMap.addEdge("428", "4", "28").addAttribute("length", 150);
         cityRoadMap.addEdge("2811", "28", "11").addAttribute("length", 100);
         
-        
-        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 5.0);
+        //3.0 => 1.5 km/100 sec => 54 km/h
+        //5.0 => 2.5 km/100 sec => 90 km/h
+        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("611").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("910").addAttribute("avgSpeed", 5.0);

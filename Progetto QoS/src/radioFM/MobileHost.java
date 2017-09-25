@@ -32,24 +32,37 @@ public class MobileHost extends nodo_host {
 
     final String UPDATE_POSITION = "update_pos";
     final String START_ROAD_RUN = "start_road_run";
+    //1 secondo => 100 secondi
     final double UPDATE_POSITION_TIME = 1000.0; //UPDATE_POSITION_TIME
+    //10 secondi => 1000 secondi
     final double STOP_WAITING_TIME = 10000.0; //WAIT AT ROAD_CROSS
     String nodo_ingresso;
     String nodo_uscita;
     int index_nodo_attuale;
     
+    //20 secondi di handover
+    private final double HANDOVER_TIME = 2000.0;
+    
     //stazione radio scelta dal mobile host
     private String stazione;
     
+    //inizio zona di handover
+    private boolean handover = false;
+    //tempo inizio e fine zona intermedia
+    private double startCollision, endCollision;
+    
+    
     /*raggio di copertura della BaseStation
-     * 130 = 65km * 2
-     * essendo la mappa in rapporto 1:2
+     * 102 = 51km * 2
+     * essendo la mappa in rapporto 1:2 (1 corrisponde a 2km)
      */
-    final int BS_RADIUS = 130;
+    final int BS_RADIUS = 102;
     //raggio del cerchio rappresentante questo mobile host
     final int RADIUS = 10;
-    //ID base station a cui il mh è registrato
+    //ID base station a cui il mh è attualmente registrato
     String currBS = "";
+    //ID base station precendente
+    String preBS = "";
     
     double currX = 0;
     double currY = 0;
@@ -170,6 +183,7 @@ public class MobileHost extends nodo_host {
             
             //se il mobile host entra nell'area di copertura di un'altra base station
             //allora notifica la sua presenza e il router lo registra
+            //verificaZonaHandover();
             String id_router = verificaRiattestazione();
             if(id_router != null) {
             	//non è necessario rimuovere informazioni dato che ancora non ce ne sono
@@ -194,9 +208,6 @@ public class MobileHost extends nodo_host {
                     Object x2 = ((Object[]) next.getAttribute("xy"))[0];
                     Object y1 = ((Object[]) curr.getAttribute("xy"))[1];
                     Object y2 = ((Object[]) next.getAttribute("xy"))[1];
-                    
-                    double nextX = Double.parseDouble(""+x2);
-                    double nextY = Double.parseDouble(""+y2);
 
                     //se il mobile host entra nell'area di copertura di un'altra base station
                     //allora notifica la sua presenza e il router lo registra
@@ -206,12 +217,13 @@ public class MobileHost extends nodo_host {
                     	//che gestisce la vecchia bs
                     	cityMap.rimuoviMobileHost(id_router, id_nodo);
                     	//ci si riattesta sulla nuova bs
+                    	//invece dell'id_nodo bisogna mettere l'indirizzo ip del mobile host
+                    	//che riceverà dalla base station, la base station a sua volta dovrà richiedere l'indirizzo IP al router
                     	cityMap.riattesta(currBS, id_nodo, stazione);
                     	System.out.println("Riattesta! "+id_router);
                     	//riattesta
                     }
                     
-
                     double xComp = Math.pow((Double.parseDouble("" + x2) - Double.parseDouble("" + x1)), 2.0);
                     double yComp = Math.pow((Double.parseDouble("" + y2) - Double.parseDouble("" + y1)), 2.0);
                     double segment_length = Math.sqrt(xComp + yComp);
@@ -299,12 +311,11 @@ public class MobileHost extends nodo_host {
     	if(bs != null) {
     		id_router = bs.getAttribute("router");
     	}
+    	boolean nessunaCollisione = true;
     	for(Node n : cityMap.cityRoadMap) {
+    		String next_router = n.getAttribute("router");
     		//Se è un nodo bs e non è la stessa bs su cui si trova il mh
     		//e il router che gestisce la prossima bs è diverso da quello corrente
-    		//TODO: verificare la zona intermedia in cui ci sono collisioni sia
-    		//con la copertura della BS corrente che di quella successiva
-    		String next_router = n.getAttribute("router");
     		if(n.getId().startsWith("B") && !(n.getId().equals(currBS)) && !(next_router.equals(id_router))) {
     			//coordinate bs prossimo
     			Object x1 = ((Object []) n.getAttribute("xy"))[0];
@@ -314,14 +325,43 @@ public class MobileHost extends nodo_host {
     			double xDif = currX - bsX;
                 double yDif = currY - bsY;
                 double distanceSquared = xDif * xDif + yDif * yDif;
-                boolean collision = distanceSquared <= (BS_RADIUS + RADIUS) * (BS_RADIUS + RADIUS);
-                if(collision) {
+                boolean collisione = distanceSquared <= (BS_RADIUS + RADIUS) * (BS_RADIUS + RADIUS);
+                if(collisione) {
+                	nessunaCollisione = false;
+                }
+                //Se trova un'altra base station ma si trova in una zona intermendia di handover
+                //non restituisce nulla, questo perchè si sta già riattestando
+                if(collisione && !handover) {
+                	startCollision = s.orologio.getCurrent_Time();
+                	System.out.println("inizio handover");
+                	handover = true;
+                	preBS = currBS;
                 	currBS = n.getId();
                 	return next_router;
                 }
     		}
     	}
+    	//se non ci sono collisioni ma handover = true allora siamo appena usciti dalla zona intermedia
+    	if(nessunaCollisione && handover) {
+    		System.out.println("fine handover");
+    		endCollision = s.orologio.getCurrent_Time();
+    		//metodo che, dato il tempo totale trascorso nella zona intermedia,
+    		//verifica se tale tempo rispetta il tempo di Handover. Se non lo rispetta
+    		//bisogna calcolare quanti pacchetti perde
+    		verificaTempo(endCollision-startCollision);
+    		handover = false;
+    	}
     	return null;
+    }
+    
+    private void verificaTempo(double time) {
+    	double scarto = HANDOVER_TIME - time;
+    	//se lo scarto è positivo allora il tempo nella zona intermedia
+    	//è inferiore rispetto al tempo richiesto dall'endover, ne consegue
+    	//che ci sarà una perdita di pacchetti.
+    	System.out.println("scarto = "+scarto);
+    	if(scarto > 0) {
+    	}
     }
     
     public void setExitFromGate(double exitGateAt) {
