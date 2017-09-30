@@ -7,7 +7,7 @@ package radioFM;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -477,8 +477,11 @@ public class Main_app extends javax.swing.JFrame {
             listElement = rootElement.getChildren("router");
             for(Object nodo : listElement) {
             	String id = ((Element) nodo).getAttributeValue("id");
+            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
             	//Si aggiungono i router di 2° livello nella lista della MobilityMap
-            	roadMap.addRouter(id, new Router(id));
+            	Router r = new Router(s, id, capacita, roadMap);
+            	roadMap.addRouter(id, r);
+            	r.start();
             	List listElement1 = ((Element) nodo).getChildren("base_station");
             	for(Object n : listElement1) {
             		String bs = ((Element) n).getText();
@@ -489,31 +492,45 @@ public class Main_app extends javax.swing.JFrame {
             	}
             }
             
-            //struttura dati di <id, router di primo livello>
-            HashMap<String,UpperLevelRouter> frouters = new HashMap<>();
             //generazione router di 1° livello
             listElement = rootElement.getChildren("first_router");
             for(Object nodo: listElement) {
             	String id = ((Element) nodo).getAttributeValue("id");
-            	UpperLevelRouter fr = new UpperLevelRouter(id);
-            	frouters.put(id, fr);
+            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
+            	UpperLevelRouter fr = new UpperLevelRouter(s, id, capacita, roadMap);
             	List listElement1 = ((Element) nodo).getChildren("r");
+            	LinkedList<Router> downlink_routers = new LinkedList<>();
             	for(Object n : listElement1) {
             		String rID = ((Element) n).getText();
-            		fr.addRouter(roadMap.getRouter(rID));
+            		//connessioni downlink
+            		downlink_routers.add(roadMap.getRouter(rID));
+            		//connessioni uplink
+            		roadMap.getRouter(rID).setUplink(fr);
             	}
+            	roadMap.addFirstRouter(id, fr);
+            	fr.addRouters(downlink_routers);
+            	fr.start();
             }
             
             //generazione router gateway
+            //NOTA: il gateway non ha connessioni uplink
             listElement = rootElement.getChildren("gateway_router");
             for(Object nodo: listElement) {
             	String id = ((Element) nodo).getAttributeValue("id");
-            	UpperLevelRouter gr = new UpperLevelRouter(id);
+            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
+            	UpperLevelRouter gr = new UpperLevelRouter(s, id, capacita, roadMap);
             	List listElement1 = ((Element) nodo).getChildren("fr");
+            	LinkedList<Router> downlink_routers = new LinkedList<>();
             	for(Object n : listElement1) {
             		String frID = ((Element) n).getText();
-            		gr.addRouter(frouters.get(frID));
+            		//connessioni downlink gateway-first_level
+            		downlink_routers.add(roadMap.getFirstRouter(frID));
+            		//connessioni uplink first_level-gateway
+            		roadMap.getFirstRouter(frID).setUplink(gr);
             	}
+            	roadMap.addFirstRouter(id, gr);
+            	gr.addRouters(downlink_routers);
+            	gr.start();
             }
             
             int lastNodeId = 1000;
@@ -550,13 +567,14 @@ public class Main_app extends javax.swing.JFrame {
                     System.out.println(station_name);
                     
                     MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, station_name);
-
+                    
                     nh.setMappa(roadMap);
                     nh.setNodo_ingresso(nodo_ingresso);
                     nh.setNodo_uscita(nodo_uscita);
                     nh.setExitFromGate(exitGateAt);
                     Mh_node car = new Mh_node(id, 0, 0);
                     roadMap.mobile_hosts.put("" + id, car);
+                    roadMap.mobHost.put(id, nh);
 
                     canale c = new canale(s, idCanale,
                             info.getCanale(0).returnCapacita(),

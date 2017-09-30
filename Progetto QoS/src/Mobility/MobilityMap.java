@@ -5,6 +5,7 @@
  */
 package Mobility;
 
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -15,7 +16,9 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.view.Viewer;
 
+import radioFM.MobileHost;
 import radioFM.Router;
+import radioFM.UpperLevelRouter;
 
 /**
  *
@@ -26,7 +29,10 @@ public class MobilityMap {
     public Graph cityRoadMap;
     //Dijkstra dijkstra;
     public HashMap<String, Mh_node> mobile_hosts = new HashMap<String, Mh_node>();
+    public HashMap<Integer, MobileHost> mobHost = new HashMap<>();
     private HashMap<String, Router> routers = new HashMap<>();
+    //struttura dati che contiene router di primo livello e gateway router
+    private HashMap<String, UpperLevelRouter> ul_routers = new HashMap<>();
     ProxyPipe pipe;
 
     public Graph getCityRoadMap() {
@@ -396,12 +402,14 @@ public class MobilityMap {
         
         //3.0 => 1.5 km/100 sec => 54 km/h
         //5.0 => 2.5 km/100 sec => 90 km/h
-        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 3.0);
-        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 3.0);
-        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 3.0);
-        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 3.0);
-        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 3.0);
-        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 5.0);
+        //11.2 => 5.6 km/100 sec => circa 200 km/h => 261 pacchetti persi
+        //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 secondi di latenza handover => 50 pacchetti persi
+        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 5.6);
         cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("910").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("27").addAttribute("avgSpeed", 5.0);
@@ -492,6 +500,14 @@ public class MobilityMap {
     public void addRouter(String id, Router r) {
     	routers.put(id, r);
     }
+    
+    public void addFirstRouter(String id, UpperLevelRouter ur) {
+    	ul_routers.put(id, ur);
+    }
+    
+    public UpperLevelRouter getFirstRouter(String id) {
+    	return ul_routers.get(id);
+    }
 
     public Router getRouter(String id) {
     	return routers.get(id);
@@ -504,11 +520,11 @@ public class MobilityMap {
     
     //riattesta il mobile host sulla nuova base station
     //inoltre aggiunge l'indirizzo del mobile host nel router
-    public void riattesta(String bs, int id_mh, String stazione) {
+    public void riattesta(String bs, int id_mh, Point2D position) {
     	Node n = cityRoadMap.getNode(bs);
     	String id_router = n.getAttribute("router");
     	Router r = routers.get(id_router);
-    	r.addMobileHost(id_mh, stazione);
+    	r.addMobileHost(id_mh, position);
     }
 
     public boolean validatePos(String id, double x, double y) {
@@ -543,6 +559,5 @@ public class MobilityMap {
         Mh_node car = mobile_hosts.get(id);
         car.setX(x);
         car.setY(y);
-
     }
 }

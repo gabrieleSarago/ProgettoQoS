@@ -5,7 +5,9 @@
  */
 package radioFM;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
@@ -32,6 +34,7 @@ public class MobileHost extends nodo_host {
 
     final String UPDATE_POSITION = "update_pos";
     final String START_ROAD_RUN = "start_road_run";
+    final String INACTIVE = "inactive";
     //1 secondo => 100 secondi
     final double UPDATE_POSITION_TIME = 1000.0; //UPDATE_POSITION_TIME
     //10 secondi => 1000 secondi
@@ -40,29 +43,38 @@ public class MobileHost extends nodo_host {
     String nodo_uscita;
     int index_nodo_attuale;
     
-    //20 secondi di handover
-    private final double HANDOVER_TIME = 2000.0;
+    double avgSpeed;
     
+    //40 secondi di handover
+    private final double HANDOVER_TIME = 40.0;
+    //2km di zona intermedia
+    private final double HANDOVER_DISTANCE = 1.0;
+    //espresso in Kbps
+    private final int AVG_RATE = 144;
+    //espresso in KByte
+    private final int PACKET_SIZE = 1526;
     //stazione radio scelta dal mobile host
     private String stazione;
     
     //inizio zona di handover
     private boolean handover = false;
-    //tempo inizio e fine zona intermedia
+    //stato del mobile host
+    private boolean attivo;
+    //distanza percorsa tra inizio e fine zona intermedia
     private double startCollision, endCollision;
-    
     
     /*raggio di copertura della BaseStation
      * 102 = 51km * 2
      * essendo la mappa in rapporto 1:2 (1 corrisponde a 2km)
      */
-    final int BS_RADIUS = 102;
+    private final double BS_RADIUS = 100.5;
     //raggio del cerchio rappresentante questo mobile host
-    final int RADIUS = 10;
+    private final double RADIUS = 10.0;
     //ID base station a cui il mh è attualmente registrato
-    String currBS = "";
-    //ID base station precendente
-    String preBS = "";
+    private String currBS = "";
+    //latenza totale handover
+    private double latenza = 0;
+    private String id_router = "";
     
     double currX = 0;
     double currY = 0;
@@ -93,7 +105,7 @@ public class MobileHost extends nodo_host {
     
     public MobileHost(scheduler s, int id_nodo, physicalLayer myPhyLayer, LinkLayer myLinkLayer, NetworkLayer myNetLayer, TransportLayer myTransportLayer, Grafo network, String tipo, int gtw, String stazione) {
         super(s, id_nodo, myPhyLayer, myLinkLayer, myNetLayer, myTransportLayer, network, tipo, gtw);
-        this.stazione = stazione;
+        this.setStazione(stazione);
         dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
     }
 
@@ -122,8 +134,20 @@ public class MobileHost extends nodo_host {
         this.mappa = mappa.cityRoadMap;
     }
 
-    public void calcolaNuovaPosizione(Edge e, double x1, double y1, double x2, double y2) {
-        double avgSpeed = (Double) e.getAttribute("avgSpeed");
+    public String getStazione() {
+		return stazione;
+	}
+
+	public void setStazione(String stazione) {
+		this.stazione = stazione;
+	}
+	
+	public boolean eAttivo() {
+		return attivo;
+	}
+
+	public void calcolaNuovaPosizione(Edge e, double x1, double y1, double x2, double y2) {
+        avgSpeed = (Double) e.getAttribute("avgSpeed");
         double angle = Math.atan(Math.abs(y2 - y1) / Math.abs(x2 - x1));
         double distance = avgSpeed * UPDATE_POSITION_TIME / 1000.0;
 
@@ -160,7 +184,20 @@ public class MobileHost extends nodo_host {
 
     @Override
     public void Handler(Messaggi m) {
-        if (m.getTipo_Messaggio().equals(START_ROAD_RUN)) {
+    	/*
+    	 * Quando inattivo aspetta un periodo UPDATE_POSITION_TIME*2
+    	 * e torna attivo
+    	 */
+    	if (m.getTipo_Messaggio().equals(INACTIVE)) {
+    		attivo = false;
+    		m.setTipo_Messaggio(UPDATE_POSITION);
+    		m.shifta(UPDATE_POSITION_TIME*2);
+    		m.setDestinazione(this);
+    		m.setSorgente(this);
+    	    s.insertMessage(m);
+    	}
+    	else if (m.getTipo_Messaggio().equals(START_ROAD_RUN)) {
+    		attivo = true;
             carIsPowerOff = false;
             dijkstra.init(mappa);
             dijkstra.setSource(mappa.getNode(nodo_ingresso));
@@ -184,10 +221,11 @@ public class MobileHost extends nodo_host {
             //se il mobile host entra nell'area di copertura di un'altra base station
             //allora notifica la sua presenza e il router lo registra
             //verificaZonaHandover();
-            String id_router = verificaRiattestazione();
-            if(id_router != null) {
+            if(verificaRiattestazione(true)) {
             	//non è necessario rimuovere informazioni dato che ancora non ce ne sono
-            	cityMap.riattesta(currBS, id_nodo, stazione);
+            	Point2D position = new Point2D.Double(currX, currY);
+            	//route message
+            	cityMap.riattesta(currBS, id_nodo, position);
             	System.out.println("Riattesta! "+id_router);
             	//riattesta
             }
@@ -199,6 +237,7 @@ public class MobileHost extends nodo_host {
             s.insertMessage(m);
 
         } else if (m.getTipo_Messaggio().equals(UPDATE_POSITION)) {
+        	attivo = true;
             if (!nodo_ingresso.equals(nodo_uscita)) {
                 if (index_nodo_attuale < list1.size() - 1) {                    
                     Node curr = list1.get(index_nodo_attuale);
@@ -208,21 +247,6 @@ public class MobileHost extends nodo_host {
                     Object x2 = ((Object[]) next.getAttribute("xy"))[0];
                     Object y1 = ((Object[]) curr.getAttribute("xy"))[1];
                     Object y2 = ((Object[]) next.getAttribute("xy"))[1];
-
-                    //se il mobile host entra nell'area di copertura di un'altra base station
-                    //allora notifica la sua presenza e il router lo registra
-                    String id_router = verificaRiattestazione();
-                    if(id_router != null) {
-                    	//si rimuovono le informazioni del mobile host dal router
-                    	//che gestisce la vecchia bs
-                    	cityMap.rimuoviMobileHost(id_router, id_nodo);
-                    	//ci si riattesta sulla nuova bs
-                    	//invece dell'id_nodo bisogna mettere l'indirizzo ip del mobile host
-                    	//che riceverà dalla base station, la base station a sua volta dovrà richiedere l'indirizzo IP al router
-                    	cityMap.riattesta(currBS, id_nodo, stazione);
-                    	System.out.println("Riattesta! "+id_router);
-                    	//riattesta
-                    }
                     
                     double xComp = Math.pow((Double.parseDouble("" + x2) - Double.parseDouble("" + x1)), 2.0);
                     double yComp = Math.pow((Double.parseDouble("" + y2) - Double.parseDouble("" + y1)), 2.0);
@@ -241,6 +265,20 @@ public class MobileHost extends nodo_host {
                             Double.parseDouble("" + y1),
                             Double.parseDouble("" + x2),
                             Double.parseDouble("" + y2));
+                    
+                  //se il mobile host entra nell'area di copertura di un'altra base station
+                    //allora notifica la sua presenza e il router lo registra
+                    if(verificaRiattestazione(false)) {
+                    	//si rimuovono le informazioni del mobile host dal router
+                    	//che gestisce la vecchia bs
+                    	cityMap.rimuoviMobileHost(id_router, id_nodo);
+                    	//ci si riattesta sulla nuova bs
+                    	Point2D position = new Point2D.Double(currX, currY);
+                    	//route message
+                    	cityMap.riattesta(currBS, id_nodo, position);
+                    	System.out.println("Riattesta! "+id_router);
+                    	//riattesta
+                    }
 
                     double waitingTime = UPDATE_POSITION_TIME;
                     
@@ -253,10 +291,22 @@ public class MobileHost extends nodo_host {
                         currDistance = 0;
                         index_nodo_attuale++;
                         waitingTime = STOP_WAITING_TIME;
+                        //numero casuale tra 0 e 10
+                    	//probabilità del 20% che il mobile host diventa inattivo
+                    	if((new Random()).nextInt(11) <= 2) {
+                    		m.setTipo_Messaggio(INACTIVE);
+                            m.shifta(waitingTime);
+                            m.setDestinazione(this);
+                            m.setSorgente(this);
+                            s.insertMessage(m);
+                            return;
+                    	}
                         //System.out.println("nodo " + this.getId() + " Arrivato su incrocio " + next + " al tempo " + s.orologio.getCurrent_Time());
                         
                         if(this.nodo_uscita.equals(next.toString())){
                             carIsPowerOff = true;
+                            //come il mobile host muore viene rimosso dalla strutture dati
+                            cityMap.rimuoviMobileHost(id_router, id_nodo);
                             for(Nodo n : info.getNodes()){
                                 Messaggi m1 = new Messaggi(POWER_OFF,this,my_wireless_channel,n,s.orologio.getCurrent_Time());
                                 m1.setNodoSorgente(this);
@@ -278,6 +328,7 @@ public class MobileHost extends nodo_host {
             }
 
         } else if (m.getTipo_Messaggio().equals("DISCOVER_NEIGHBOURS")) {
+        	attivo = true;
             if(this.carIsPowerOff == false)
             {
                 if (m.saliPilaProtocollare == false) {
@@ -304,10 +355,9 @@ public class MobileHost extends nodo_host {
      * @return id router che gestisce la prossima bs
      */
     
-    private String verificaRiattestazione() {
+    private boolean verificaRiattestazione(boolean generation) {
     	//Si ricava il router che gestisce la bs corrente
     	Node bs = cityMap.cityRoadMap.getNode(currBS);
-    	String id_router = "";
     	if(bs != null) {
     		id_router = bs.getAttribute("router");
     	}
@@ -329,39 +379,78 @@ public class MobileHost extends nodo_host {
                 if(collisione) {
                 	nessunaCollisione = false;
                 }
+                //caso iniziale in cui il mobile host viene generato
+                if(collisione && generation) {
+                	currBS = n.getId();
+                	id_router = n.getAttribute("router");
+                	return true;
+                }
                 //Se trova un'altra base station ma si trova in una zona intermendia di handover
                 //non restituisce nulla, questo perchè si sta già riattestando
-                if(collisione && !handover) {
-                	startCollision = s.orologio.getCurrent_Time();
+                else if(collisione && !handover) {
+                	startCollision = currDistance;
                 	System.out.println("inizio handover");
                 	handover = true;
-                	preBS = currBS;
                 	currBS = n.getId();
-                	return next_router;
+                	id_router = n.getAttribute("router");
+                	return true;
                 }
     		}
     	}
-    	//se non ci sono collisioni ma handover = true allora siamo appena usciti dalla zona intermedia
+    	//se non ci sono collisioni con altre bs ma handover = true allora siamo appena usciti dalla zona intermedia
     	if(nessunaCollisione && handover) {
     		System.out.println("fine handover");
-    		endCollision = s.orologio.getCurrent_Time();
+    		endCollision = currDistance;
     		//metodo che, dato il tempo totale trascorso nella zona intermedia,
     		//verifica se tale tempo rispetta il tempo di Handover. Se non lo rispetta
     		//bisogna calcolare quanti pacchetti perde
     		verificaTempo(endCollision-startCollision);
     		handover = false;
     	}
-    	return null;
+    	return false;
     }
     
-    private void verificaTempo(double time) {
-    	double scarto = HANDOVER_TIME - time;
+    private void verificaTempo(double distance) {
+    	//espresso in km/h
+    	/*
+    	 * Esempio: speed = 5.0
+    	 * 5.0/2.0 = 2.5km/100s quindi 2.5/100.0 = 0.025km/s
+    	 * 0.025*3600.0 = 90km/h
+    	 */
+    	double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
+    	System.out.println(realSpeed);
+    	System.out.println("distanza = "+distance);
+    	double time = HANDOVER_DISTANCE/((realSpeed/3600.0));
+    	System.out.println("Tempo zona intermedia = "+time);
+    	double latenza_handover = HANDOVER_TIME - time;
     	//se lo scarto è positivo allora il tempo nella zona intermedia
-    	//è inferiore rispetto al tempo richiesto dall'endover, ne consegue
+    	//è inferiore rispetto al tempo richiesto dall'handover, ne consegue
     	//che ci sarà una perdita di pacchetti.
-    	System.out.println("scarto = "+scarto);
-    	if(scarto > 0) {
+    	System.out.println("latenza = "+latenza_handover);
+    	if(latenza_handover > 0) {
+    		//si aggiorna la latenza totale incontrata
+    		latenza += latenza_handover;
+    		System.out.println("latenza totale = "+latenza);
+    		//espresso in bit
+    		double bitrate_loss = AVG_RATE*1000*latenza_handover;
+    		System.out.println("bitrate = "+bitrate_loss);
+    		int pckts_loss = (int) bitrate_loss/(PACKET_SIZE*8);
+    		System.out.println("pacchetti persi = "+pckts_loss);
     	}
+    }
+    
+    public void notificaRiattesta() {
+    	//currBS = "";
+    	//siccome le informazioni sono state cancellate dal router
+    	//è come se bisognasse riattestarsi alla prima BS
+    	//quindi generation = true
+    	verificaRiattestazione(true);
+    	//Non c'è bisogno di richiedere la rimozione di informazioni
+    	//perchè sono già state rimosse
+    	Point2D position = new Point2D.Double(currX, currY);
+    	//corrisponde al route message
+    	//ci si riattesta sulla nuova bs
+    	cityMap.riattesta(currBS, id_nodo, position);
     }
     
     public void setExitFromGate(double exitGateAt) {
