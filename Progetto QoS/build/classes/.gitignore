@@ -1,11 +1,2 @@
-/Mobility/
-/base_simulator/
-/conf.xml
-/filter/
-/log4j.properties_OLD
-/log4j.xml
 /radioFM/
-/reti_tlc_gruppo_0/
-/reti_tlc_gruppo_DV/
-/standardNetwork/
-/tests/
+/Mobility/

@@ -2,6 +2,7 @@ package radioFM;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import Mobility.MobilityMap;
@@ -23,8 +24,8 @@ public class Router{
 	//associazione (id , posizione mobile host) - time to live
 	/*
 	 * TODO Aggiungere una struttura dati id - stazione radio FM.
-	 * Non si aggiungono le frequenze radio poichè basta una stringa attestante il nome della stazione
-	 * dopodichè la frequenza verrà inviata dal router al mobile host
+	 * Non si aggiungono le frequenze radio poiche basta una stringa attestante il nome della stazione
+	 * dopodiche la frequenza verra inviata dal router al mobile host
 	*/
 	
 	protected HashMap<Integer,Point2D> cache;
@@ -46,27 +47,32 @@ public class Router{
 	public void Handler(Messaggi m){
 		if (m.getTipo_Messaggio().equals(REFRESH)) {
 			double now = s.orologio.getCurrent_Time();
-			//TODO errore iteratore!
+			System.out.println("periodo di refresh router = "+this.id+" ora = "+now);
+			LinkedList<Integer> removable = new LinkedList<>();
 			for(Entry<Integer,Double> e : ttl.entrySet()) {
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
-				//se il ttl è scaduto
+				//se il ttl e scaduto
 				if(mh.eAttivo() && diff >= ROUTE_TIMEOUT) {
 					//elimina la route dalle strutture dati
-					cache.remove(e.getKey());
-					ttl.remove(e.getKey());
+					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
 					mh.notificaRiattesta();
 				}
-				//ttl scaduto e non è attivo il mobile host
+				//ttl scaduto e non e attivo il mobile host
 				if(!(mh.eAttivo()) && diff >= PAGING_TIMEOUT) {
 					//elimina la route dalle strutture dati
-					cache.remove(e.getKey());
-					ttl.remove(e.getKey());
+					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
 					mh.notificaRiattesta();
 				}
 			}
+			for(int id : removable){
+				cache.remove(id);
+				ttl.remove(id);
+			}
+			removable.clear();
+			removable = null;
 			/*
 			 * Periodo di refresh di 9 secondi
 			 */
@@ -111,9 +117,11 @@ public class Router{
 			}
 			//Router pieno di connessioni attive, chiamata rifiutata
 			if(id == -1) {
-				System.out.println("capacità router superata!");
+				System.out.println("capacita router superata!");
+				return;
 			}
 			else {
+				System.out.println("Router = "+this.id+" rimozione mh inattivo = "+id);
 				ttl.remove(id);
 				cache.remove(id);
 				if(uplink != null) {
@@ -122,6 +130,7 @@ public class Router{
 				capacita_paging--;
 			}
 		}
+		System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
 		cache.put(id_mh, position);
 		ttl.put(id_mh, s.orologio.getCurrent_Time());
 		if(uplink != null) {
@@ -130,6 +139,7 @@ public class Router{
 	}
 	
 	public synchronized void removeMobileHost(int id_mh) {
+		System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
 		cache.remove(id_mh);
 		ttl.remove(id_mh);
 		if(uplink != null) {

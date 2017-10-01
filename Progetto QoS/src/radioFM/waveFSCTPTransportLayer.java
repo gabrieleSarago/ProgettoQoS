@@ -8,7 +8,6 @@ package radioFM;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Vanet.NodoMacchina;
 import base_simulator.Messaggi;
 import base_simulator.scheduler;
 import base_simulator.layers.Applicazione;
@@ -356,14 +355,14 @@ public class waveFSCTPTransportLayer extends tcpTransportLayer {
 
     private void stampaStatsApplication() {
         System.out.println("======STAMPA APPLICATION LAYER");
-        System.out.println("Node id:" + ((NodoMacchina) nodo).getId());
+        System.out.println("Node id:" + ((MobileHost) nodo).getId());
         System.out.println("Application Request..:" + applicationRequest);
         System.out.println("Application Start....:" + applicationStart);
         System.out.println("Application Stop....:" + applicationStop);
 
         for (HashMap.Entry<Integer, Applicazione> e : activeApp.entrySet()) {
             Applicazione a = e.getValue();
-            a.stampaStatistiche(((NodoMacchina) nodo).getId());
+            a.stampaStatistiche(((MobileHost) nodo).getId());
         }
 
     }

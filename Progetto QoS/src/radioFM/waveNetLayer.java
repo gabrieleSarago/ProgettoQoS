@@ -433,7 +433,7 @@ public class waveNetLayer extends NetworkLayer {
         }
 
         mst.compute();
-        try {
+        /*try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("output/routes_" + ((MobileHost) nodo).getId() + ".txt", true));
             bw.write("\nTempo:" + s.orologio.getCurrent_Time() + "\n");
             bw.write("Destinazione\t NEXTHOP\t Costo\n");
@@ -445,6 +445,6 @@ public class waveNetLayer extends NetworkLayer {
             bw.close();
         } catch (IOException ex) {
             Logger.getLogger(waveNetLayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 }

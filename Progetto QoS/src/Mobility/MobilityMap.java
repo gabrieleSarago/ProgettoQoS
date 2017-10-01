@@ -48,42 +48,6 @@ public class MobilityMap {
 
         createCityMap();
 
-        // Edge lengths are stored in an attribute called "length"
-        // The length of a path is the sum of the lengths of its edges
-        //dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
-        // Compute the shortest paths in g from A to all nodes
-        //dijkstra.init(cityRoadMap);
-        //dijkstra.setSource(cityRoadMap.getNode("A"));
-        //dijkstra.compute();
-
-        // Print the lengths of all the shortest paths
-        /*for (Node node : cityRoadMap) {
-            System.out.printf("%s->%s:%10.2f%n", dijkstra.getSource(), node,
-                    dijkstra.getPathLength(node));
-
-        }*/
-
-        // Color in blue all the nodes on the shortest path form A to B
-        /*for (Node node : dijkstra.getPathNodes(cityRoadMap.getNode("E"))) {
-        	node.addAttribute("ui.style", "fill-color: white; size: 25px,25px;");                        
-        }*/
-
-        // Color in red all the edges in the shortest path tree
-        /*for (Edge edge : dijkstra.getTreeEdges()) {
-        	edge.addAttribute("ui.style", "fill-color: red;");
-        }*/
-
-        // Print the shortest path from A to B
-        //System.out.println(dijkstra.getPath(cityRoadMap.getNode("E")));
-
-        // Build a list containing the nodes in the shortest path from A to B
-        // Note that nodes are added at the beginning of the list
-        // because the iterator traverses them in reverse order, from B to A
-        /*ArrayList<Node> list1 = new ArrayList<Node>();
-        for (Node node : dijkstra.getPathNodes(cityRoadMap.getNode("E"))) {
-            list1.add(0, node);
-        }*/
-
         for (Node n : cityRoadMap) {
             n.addAttribute("label", n.getId());
             if(n.getId().startsWith("B")) {
@@ -403,7 +367,7 @@ public class MobilityMap {
         //3.0 => 1.5 km/100 sec => 54 km/h
         //5.0 => 2.5 km/100 sec => 90 km/h
         //11.2 => 5.6 km/100 sec => circa 200 km/h => 261 pacchetti persi
-        //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 secondi di latenza handover => 50 pacchetti persi
+        //5.6 => 2.8 km/100 sec = > circa 100 km/h => circa 5 secondi di latenza handover => 50 pacchetti persi
         cityRoadMap.getEdge("12").addAttribute("avgSpeed", 5.6);
         cityRoadMap.getEdge("13").addAttribute("avgSpeed", 5.6);
         cityRoadMap.getEdge("34").addAttribute("avgSpeed", 5.6);

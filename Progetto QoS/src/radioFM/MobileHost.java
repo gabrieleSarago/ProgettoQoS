@@ -70,7 +70,7 @@ public class MobileHost extends nodo_host {
     private final double BS_RADIUS = 100.5;
     //raggio del cerchio rappresentante questo mobile host
     private final double RADIUS = 10.0;
-    //ID base station a cui il mh è attualmente registrato
+    //ID base station a cui il mh e attualmente registrato
     private String currBS = "";
     //latenza totale handover
     private double latenza = 0;
@@ -222,7 +222,7 @@ public class MobileHost extends nodo_host {
             //allora notifica la sua presenza e il router lo registra
             //verificaZonaHandover();
             if(verificaRiattestazione(true)) {
-            	//non è necessario rimuovere informazioni dato che ancora non ce ne sono
+            	//non e necessario rimuovere informazioni dato che ancora non ce ne sono
             	Point2D position = new Point2D.Double(currX, currY);
             	//route message
             	cityMap.riattesta(currBS, id_nodo, position);
@@ -292,7 +292,7 @@ public class MobileHost extends nodo_host {
                         index_nodo_attuale++;
                         waitingTime = STOP_WAITING_TIME;
                         //numero casuale tra 0 e 10
-                    	//probabilità del 20% che il mobile host diventa inattivo
+                    	//probabilitï¿½ del 20% che il mobile host diventa inattivo
                     	if((new Random()).nextInt(11) <= 2) {
                     		m.setTipo_Messaggio(INACTIVE);
                             m.shifta(waitingTime);
@@ -351,7 +351,7 @@ public class MobileHost extends nodo_host {
     }
     
     /**
-     * Verifica se è necessario riattestarsi su un altra base station
+     * Verifica se e necessario riattestarsi su un altra base station
      * @return id router che gestisce la prossima bs
      */
     
@@ -364,8 +364,8 @@ public class MobileHost extends nodo_host {
     	boolean nessunaCollisione = true;
     	for(Node n : cityMap.cityRoadMap) {
     		String next_router = n.getAttribute("router");
-    		//Se è un nodo bs e non è la stessa bs su cui si trova il mh
-    		//e il router che gestisce la prossima bs è diverso da quello corrente
+    		//Se e un nodo bs e non e la stessa bs su cui si trova il mh
+    		//e il router che gestisce la prossima bs e diverso da quello corrente
     		if(n.getId().startsWith("B") && !(n.getId().equals(currBS)) && !(next_router.equals(id_router))) {
     			//coordinate bs prossimo
     			Object x1 = ((Object []) n.getAttribute("xy"))[0];
@@ -386,7 +386,7 @@ public class MobileHost extends nodo_host {
                 	return true;
                 }
                 //Se trova un'altra base station ma si trova in una zona intermendia di handover
-                //non restituisce nulla, questo perchè si sta già riattestando
+                //non restituisce nulla, questo perchï¿½ si sta giï¿½ riattestando
                 else if(collisione && !handover) {
                 	startCollision = currDistance;
                 	System.out.println("inizio handover");
@@ -423,9 +423,9 @@ public class MobileHost extends nodo_host {
     	double time = HANDOVER_DISTANCE/((realSpeed/3600.0));
     	System.out.println("Tempo zona intermedia = "+time);
     	double latenza_handover = HANDOVER_TIME - time;
-    	//se lo scarto è positivo allora il tempo nella zona intermedia
-    	//è inferiore rispetto al tempo richiesto dall'handover, ne consegue
-    	//che ci sarà una perdita di pacchetti.
+    	//se lo scarto e positivo allora il tempo nella zona intermedia
+    	//e inferiore rispetto al tempo richiesto dall'handover, ne consegue
+    	//che ci sara una perdita di pacchetti.
     	System.out.println("latenza = "+latenza_handover);
     	if(latenza_handover > 0) {
     		//si aggiorna la latenza totale incontrata
@@ -442,11 +442,12 @@ public class MobileHost extends nodo_host {
     public void notificaRiattesta() {
     	//currBS = "";
     	//siccome le informazioni sono state cancellate dal router
-    	//è come se bisognasse riattestarsi alla prima BS
+    	//e come se bisognasse riattestarsi alla prima BS
     	//quindi generation = true
     	verificaRiattestazione(true);
-    	//Non c'è bisogno di richiedere la rimozione di informazioni
-    	//perchè sono già state rimosse
+    	System.out.println("notifica riattestazione router = "+id_router);
+    	//Non c'e bisogno di richiedere la rimozione di informazioni
+    	//perche sono gia state rimosse
     	Point2D position = new Point2D.Double(currX, currY);
     	//corrisponde al route message
     	//ci si riattesta sulla nuova bs
