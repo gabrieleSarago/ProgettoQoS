@@ -10,6 +10,8 @@
 
 package base_simulator;
 import base_simulator.layers.LinkLayerStopAndWait;
+import radioFM.Statistica;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.lang.reflect.Method;
@@ -158,7 +160,7 @@ public class scheduler implements Runnable{
         
         //Simulazione terminata stampiamo le statistiche dei nodi interessati
         //info.stampaStatisticheNodo();
-        
+        Statistica.salva();
         
         //Solo aggiornamento interfaccia grafica
         while(buffer.isEmpty() && orologio.getCurrent_Time()<=max_Time){

@@ -52,24 +52,18 @@ public class Router{
 			for(Entry<Integer,Double> e : ttl.entrySet()) {
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
-				//se il ttl e scaduto
-				if(mh.eAttivo() && diff >= ROUTE_TIMEOUT) {
-					//elimina la route dalle strutture dati
+				//se il ttl e scaduto ed e attivo o non attivo
+				if(mh.eAttivo() && diff >= ROUTE_TIMEOUT || !(mh.eAttivo()) && diff >= PAGING_TIMEOUT) {
+					//aggiungi ai candidati per il refresh
 					removable.add(e.getKey());
-					//notifica il mobile host di riattestarsi
-					mh.notificaRiattesta();
-				}
-				//ttl scaduto e non e attivo il mobile host
-				if(!(mh.eAttivo()) && diff >= PAGING_TIMEOUT) {
-					//elimina la route dalle strutture dati
-					removable.add(e.getKey());
-					//notifica il mobile host di riattestarsi
-					mh.notificaRiattesta();
 				}
 			}
 			for(int id : removable){
-				cache.remove(id);
-				ttl.remove(id);
+				//elimina la route dalle strutture dati
+				removeMobileHost(id);
+				//notifica il mobile host di riattestarsi
+				MobileHost mh = map.mobHost.get(id);
+				mh.notificaRiattesta();
 			}
 			removable.clear();
 			removable = null;

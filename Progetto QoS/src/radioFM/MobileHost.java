@@ -75,6 +75,9 @@ public class MobileHost extends nodo_host {
     //latenza totale handover
     private double latenza = 0;
     private String id_router = "";
+    //numero perdite pacchetti durante handover
+    private int numPerdite = 0;
+    private int tot_pckts_loss = 0;
     
     double currX = 0;
     double currY = 0;
@@ -307,6 +310,9 @@ public class MobileHost extends nodo_host {
                             carIsPowerOff = true;
                             //come il mobile host muore viene rimosso dalla strutture dati
                             cityMap.rimuoviMobileHost(id_router, id_nodo);
+                            Statistica.salvaMediaPacchetti(tot_pckts_loss/numPerdite);
+                            Statistica.salvaLatenzaTotale(latenza);
+                            Statistica.salvaLatenzaMedia(latenza/numPerdite);
                             for(Nodo n : info.getNodes()){
                                 Messaggi m1 = new Messaggi(POWER_OFF,this,my_wireless_channel,n,s.orologio.getCurrent_Time());
                                 m1.setNodoSorgente(this);
@@ -419,7 +425,7 @@ public class MobileHost extends nodo_host {
     	 */
     	double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
     	System.out.println(realSpeed);
-    	System.out.println("distanza = "+distance);
+    	//System.out.println("distanza = "+distance);
     	double time = HANDOVER_DISTANCE/((realSpeed/3600.0));
     	System.out.println("Tempo zona intermedia = "+time);
     	double latenza_handover = HANDOVER_TIME - time;
@@ -436,6 +442,8 @@ public class MobileHost extends nodo_host {
     		System.out.println("bitrate = "+bitrate_loss);
     		int pckts_loss = (int) bitrate_loss/(PACKET_SIZE*8);
     		System.out.println("pacchetti persi = "+pckts_loss);
+    		numPerdite++;
+    		tot_pckts_loss+= pckts_loss;
     	}
     }
     

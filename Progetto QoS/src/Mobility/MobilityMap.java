@@ -27,7 +27,6 @@ import radioFM.UpperLevelRouter;
 public class MobilityMap {
 
     public Graph cityRoadMap;
-    //Dijkstra dijkstra;
     public HashMap<String, Mh_node> mobile_hosts = new HashMap<String, Mh_node>();
     public HashMap<Integer, MobileHost> mobHost = new HashMap<>();
     private HashMap<String, Router> routers = new HashMap<>();
