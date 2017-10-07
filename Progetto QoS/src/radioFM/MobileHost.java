@@ -35,20 +35,23 @@ public class MobileHost extends nodo_host {
     final String UPDATE_POSITION = "update_pos";
     final String START_ROAD_RUN = "start_road_run";
     final String INACTIVE = "inactive";
-    //1 secondo => 100 secondi
+    //aggiornamento ogni secondo
+    //si fa in modo che 1 secondo corrisponda a 100 secondi
     final double UPDATE_POSITION_TIME = 1000.0; //UPDATE_POSITION_TIME
-    //10 secondi => 1000 secondi
-    final double STOP_WAITING_TIME = 10000.0; //WAIT AT ROAD_CROSS
+    //stop al nodo 0 secondi
+    final double STOP_WAITING_TIME = 0; //WAIT AT ROAD_CROSS
     String nodo_ingresso;
     String nodo_uscita;
     int index_nodo_attuale;
     
     double avgSpeed;
     
-    //40 secondi di handover
-    private final double HANDOVER_TIME = 40.0;
-    //2km di zona intermedia
-    private final double HANDOVER_DISTANCE = 1.0;
+    //1s di handover
+    private final double HANDOVER_TIME = 1.0;
+    //20m di zona di sovrapposizione
+    private final double HANDOVER_DISTANCE = 0.02;
+    //numero di volte che il mh consegue un handover
+    private int numHandover = 0;
     //espresso in Kbps
     private final int AVG_RATE = 144;
     //espresso in KByte
@@ -64,12 +67,12 @@ public class MobileHost extends nodo_host {
     private double startCollision, endCollision;
     
     /*raggio di copertura della BaseStation
-     * 102 = 51km * 2
-     * essendo la mappa in rapporto 1:2 (1 corrisponde a 2km)
+     * 100.02 = 50.01 km *2
+     * essendo la mappa in rapporto 1:2 (1 corrisponde a 0.5 km)
      */
-    private final double BS_RADIUS = 100.5;
-    //raggio del cerchio rappresentante questo mobile host
-    private final double RADIUS = 10.0;
+    private final double BS_RADIUS = 100.02;
+    //raggio del cerchio rappresentante questo mobile host = 0.5m
+    private final double RADIUS = 0.001;
     //ID base station a cui il mh e attualmente registrato
     private String currBS = "";
     //latenza totale handover
@@ -78,6 +81,8 @@ public class MobileHost extends nodo_host {
     //numero perdite pacchetti durante handover
     private int numPerdite = 0;
     private int tot_pckts_loss = 0;
+    
+    private double tempo_inizio = 0;
     
     double currX = 0;
     double currY = 0;
@@ -152,7 +157,7 @@ public class MobileHost extends nodo_host {
 	public void calcolaNuovaPosizione(Edge e, double x1, double y1, double x2, double y2) {
         avgSpeed = (Double) e.getAttribute("avgSpeed");
         double angle = Math.atan(Math.abs(y2 - y1) / Math.abs(x2 - x1));
-        double distance = avgSpeed * UPDATE_POSITION_TIME / 1000.0;
+        double distance = (avgSpeed) * UPDATE_POSITION_TIME / 1000.0;
 
         double addX = 0;
         double addY = 0;
@@ -202,6 +207,7 @@ public class MobileHost extends nodo_host {
     	else if (m.getTipo_Messaggio().equals(START_ROAD_RUN)) {
     		attivo = true;
             carIsPowerOff = false;
+            tempo_inizio = s.orologio.getCurrent_Time();
             dijkstra.init(mappa);
             dijkstra.setSource(mappa.getNode(nodo_ingresso));
             dijkstra.compute();
@@ -310,9 +316,15 @@ public class MobileHost extends nodo_host {
                             carIsPowerOff = true;
                             //come il mobile host muore viene rimosso dalla strutture dati
                             cityMap.rimuoviMobileHost(id_router, id_nodo);
-                            Statistica.salvaMediaPacchetti(tot_pckts_loss/numPerdite);
-                            Statistica.salvaLatenzaTotale(latenza);
-                            Statistica.salvaLatenzaMedia(latenza/numPerdite);
+                            if(numPerdite!= 0){
+                            	Statistica.salvaMediaPacchetti(tot_pckts_loss/numPerdite);
+                            }
+                            Statistica.salvaLatenzaMedia(latenza/numHandover);
+                            double Tx = s.orologio.getCurrent_Time() - tempo_inizio;
+                            double bitrate = AVG_RATE*1000*Tx;
+                            int tot_pckts = (int) bitrate/(PACKET_SIZE*8);
+                            double pr = tot_pckts_loss/tot_pckts;
+                            Statistica.salvaPercentualePacchettiPersi(pr);
                             for(Nodo n : info.getNodes()){
                                 Messaggi m1 = new Messaggi(POWER_OFF,this,my_wireless_channel,n,s.orologio.getCurrent_Time());
                                 m1.setNodoSorgente(this);
@@ -325,8 +337,7 @@ public class MobileHost extends nodo_host {
                     }
 
                     //System.out.println("nodo " + this.getId() + " posizione x,y (" + currX + "," + currY + ") al tempo " + s.orologio.getCurrent_Time());
-                    if(carIsPowerOff == false)
-                    {
+                    if(carIsPowerOff == false){
                       m.shifta(waitingTime);
                       s.insertMessage(m);
                     }
@@ -397,6 +408,7 @@ public class MobileHost extends nodo_host {
                 	startCollision = currDistance;
                 	System.out.println("inizio handover");
                 	handover = true;
+                	numHandover++;
                 	currBS = n.getId();
                 	id_router = n.getAttribute("router");
                 	return true;
@@ -420,23 +432,22 @@ public class MobileHost extends nodo_host {
     	//espresso in km/h
     	/*
     	 * Esempio: speed = 5.0
-    	 * 5.0/2.0 = 2.5km/100s quindi 2.5/100.0 = 0.025km/s
+    	 * 5.0/2.0/100.0 = 0.025km/s
     	 * 0.025*3600.0 = 90km/h
     	 */
     	double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
     	System.out.println(realSpeed);
-    	//System.out.println("distanza = "+distance);
     	double time = HANDOVER_DISTANCE/((realSpeed/3600.0));
     	System.out.println("Tempo zona intermedia = "+time);
     	double latenza_handover = HANDOVER_TIME - time;
-    	//se lo scarto e positivo allora il tempo nella zona intermedia
+    	System.out.println("latenza = "+latenza_handover);
+    	latenza += latenza_handover;
+    	//si aggiorna la latenza totale
+		System.out.println("latenza totale = "+latenza);
+		//se lo scarto e positivo allora il tempo nella zona intermedia
     	//e inferiore rispetto al tempo richiesto dall'handover, ne consegue
     	//che ci sara una perdita di pacchetti.
-    	System.out.println("latenza = "+latenza_handover);
     	if(latenza_handover > 0) {
-    		//si aggiorna la latenza totale incontrata
-    		latenza += latenza_handover;
-    		System.out.println("latenza totale = "+latenza);
     		//espresso in bit
     		double bitrate_loss = AVG_RATE*1000*latenza_handover;
     		System.out.println("bitrate = "+bitrate_loss);
@@ -453,7 +464,7 @@ public class MobileHost extends nodo_host {
     	//e come se bisognasse riattestarsi alla prima BS
     	//quindi generation = true
     	verificaRiattestazione(true);
-    	System.out.println("notifica riattestazione router = "+id_router);
+    	//System.out.println("notifica riattestazione router = "+id_router);
     	//Non c'e bisogno di richiedere la rimozione di informazioni
     	//perche sono gia state rimosse
     	Point2D position = new Point2D.Double(currX, currY);

@@ -12,9 +12,8 @@ public class Statistica {
 	
 	private static int tot_pacchetti = 0;
 	private static int numMobileHost = 0;
-	private static double latenze = 0;
 	private static double med_latenze = 0;
-	
+	private static double prob = 0;
 	/**
 	 * Salva le perdite medie di pacchetti del mh
 	 * @param media_pckts_mh
@@ -24,12 +23,8 @@ public class Statistica {
 		numMobileHost++;
 	}
 	
-	/**
-	 * Somma le latenze totali dei mh che verranno divise per il numero di mh
-	 * @param latenza_mh
-	 */
-	public static void salvaLatenzaTotale(double latenza_mh){
-		latenze+= latenza_mh;
+	public static void salvaPercentualePacchettiPersi(double pr){
+		prob+=pr;
 	}
 	
 	/**
@@ -41,9 +36,10 @@ public class Statistica {
 	}
 	
 	public static void salva(){
+		System.out.println("numero mobile host = "+numMobileHost);
 		int media_tot_pacchetti = tot_pacchetti/numMobileHost;
-		double lat_media_tot = latenze/numMobileHost;
 		double lat_media = med_latenze/numMobileHost;
+		double pr = prob/numMobileHost;
 		try {
 			File f = new File("src/radioFM/mediaPacchetti.txt");
 			if(!f.exists()) {
@@ -51,18 +47,20 @@ public class Statistica {
 			}
 			salvaStat(f,media_tot_pacchetti);
 			System.out.println("mediaPacchetti = "+media_tot_pacchetti);
-			f = new File("src/radioFM/latenzaMediaTot.txt");
-			if(!f.exists()) {
-				f.createNewFile();
-			}
-			salvaStat(f,lat_media_tot);
-			System.out.println("Latenza media totale = "+lat_media_tot);
+			
 			f = new File("src/radioFM/latenzaMedia.txt");
 			if(!f.exists()) {
 				f.createNewFile();
 			}
 			salvaStat(f,lat_media);
 			System.out.println("Latenza media = "+lat_media);
+			
+			f = new File("src/radioFM/probabilitaPacchettiPersi.txt");
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			salvaStat(f,pr);
+			System.out.println("Probabilità pacchetti persi = "+pr);
 		}catch(IOException e){
 			e.printStackTrace();
 		}

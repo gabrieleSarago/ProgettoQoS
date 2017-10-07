@@ -145,7 +145,6 @@ public class scheduler implements Runnable{
                 orologio.setCurrent_Time(m.getTempo_spedizione().getCurrent_Time());
                 //Faccio scattare l'evento sul nodo destinazione'
                 lanciaHandler(m);
-
             }
             
         }
@@ -165,7 +164,7 @@ public class scheduler implements Runnable{
         //Solo aggiornamento interfaccia grafica
         while(buffer.isEmpty() && orologio.getCurrent_Time()<=max_Time){
             //Ogni secondo corrisponde a 100 secondi di simulazione
-        	this.orologio.shifta(100000);
+        	this.orologio.shifta(10000);
 
         }
         
@@ -193,7 +192,6 @@ public class scheduler implements Runnable{
         }
         if(trovato)
             buffer.add(posto, msg);
-            
         else buffer.add(msg);
     }//metodo insertMessage(Messaggi msg)
 

@@ -95,7 +95,6 @@ public class MobilityMap {
             }
         }*/
         for (Node node : cityRoadMap) {
-
             System.out.println(node.toString() + " Posizione (x,y) :" + node.getNumber("x") + "," + ((Object[]) node.getAttribute("xy"))[1]);
         }
 
@@ -364,18 +363,18 @@ public class MobilityMap {
         cityRoadMap.addEdge("2811", "28", "11").addAttribute("length", 100);
         
         //3.0 => 1.5 km/100 sec => 54 km/h
-        //5.0 => 2.5 km/100 sec => 90 km/h
-        //11.2 => 5.6 km/100 sec => circa 200 km/h => 261 pacchetti persi
-        //5.6 => 2.8 km/100 sec = > circa 100 km/h => circa 5 secondi di latenza handover => 50 pacchetti persi
-        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 5.6);
-        cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("910").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("27").addAttribute("avgSpeed", 5.0);
+        //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
+        //11.2 => 5.6 km/100 sec => circa 200 km/h
+        //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
+        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("910").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("27").addAttribute("avgSpeed", 11.2);
         cityRoadMap.getEdge("28").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("89").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("79").addAttribute("avgSpeed", 5.0);

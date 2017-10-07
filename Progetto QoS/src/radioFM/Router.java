@@ -17,10 +17,10 @@ public class Router{
 	protected scheduler s;
 	protected MobilityMap map;
 	protected final String REFRESH = "check";
-	//9 secondi
-	protected final double ROUTE_TIMEOUT = 9000.0;
-	//3 minuti
-	protected final double PAGING_TIMEOUT = 180000.0;
+	//50 millisecondi
+	protected final double ROUTE_TIMEOUT = 50.0;
+	//500 millisecondi
+	protected final double PAGING_TIMEOUT = 500.0;
 	//associazione (id , posizione mobile host) - time to live
 	/*
 	 * TODO Aggiungere una struttura dati id - stazione radio FM.
@@ -47,7 +47,7 @@ public class Router{
 	public void Handler(Messaggi m){
 		if (m.getTipo_Messaggio().equals(REFRESH)) {
 			double now = s.orologio.getCurrent_Time();
-			System.out.println("periodo di refresh router = "+this.id+" ora = "+now);
+			//System.out.println("periodo di refresh router = "+this.id+" ora = "+now);
 			LinkedList<Integer> removable = new LinkedList<>();
 			for(Entry<Integer,Double> e : ttl.entrySet()) {
 				double diff = now - e.getValue();
@@ -68,7 +68,7 @@ public class Router{
 			removable.clear();
 			removable = null;
 			/*
-			 * Periodo di refresh di 9 secondi
+			 * Periodo di refresh di 50 millisecondi
 			 */
 			m.shifta(ROUTE_TIMEOUT);
 			m.setDestinazione((Router)this);
@@ -124,7 +124,7 @@ public class Router{
 				capacita_paging--;
 			}
 		}
-		System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
+		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
 		cache.put(id_mh, position);
 		ttl.put(id_mh, s.orologio.getCurrent_Time());
 		if(uplink != null) {
@@ -133,7 +133,7 @@ public class Router{
 	}
 	
 	public synchronized void removeMobileHost(int id_mh) {
-		System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
+		//System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
 		cache.remove(id_mh);
 		ttl.remove(id_mh);
 		if(uplink != null) {
