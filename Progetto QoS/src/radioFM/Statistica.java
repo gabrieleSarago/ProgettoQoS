@@ -21,10 +21,10 @@ public class Statistica {
 	 */
 	public static void salvaMediaPacchetti(int media_pckts_mh){
 		tot_pacchetti+=media_pckts_mh;
-		numMobileHost++;
 	}
 	
 	public static void salvaPercentualePacchettiPersi(double pr){
+		numMobileHost++;
 		prob+=pr;
 	}
 	
