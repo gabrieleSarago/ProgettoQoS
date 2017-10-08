@@ -35,7 +35,7 @@ public class Main_app {
 
     private static void init_sim_parameters() {
         //Tempo simulazione = 600 secondi
-    	s = new scheduler(600000, false);
+    	s = new scheduler(1200000, false);
     }
     
     private String[] stazioni = {"RDS","RTL 102.5", "RAI RADIO 1", "RAI RADIO 2", "RAI RADIO 3", "RADIO DEEJAY"};

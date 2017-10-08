@@ -5,7 +5,6 @@
  */
 package Mobility;
 
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -366,45 +365,45 @@ public class MobilityMap {
         //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
         //11.2 => 5.6 km/100 sec => circa 200 km/h
         //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
-        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("910").addAttribute("avgSpeed", 11.2);
-        cityRoadMap.getEdge("27").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("12").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("13").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("34").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("45").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("36").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("611").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("1011").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("910").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("27").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("28").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("89").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("89").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("79").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("916").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("916").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("915").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1115").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1113").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1517").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("1115").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("1113").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("1517").addAttribute("avgSpeed", 5.6);
         cityRoadMap.getEdge("1415").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1314").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1320").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("1314").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("1320").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("1112").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1221").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1718").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1419").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1920").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("1221").addAttribute("avgSpeed", 11.2);
+        cityRoadMap.getEdge("1718").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("1419").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("1920").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("2021").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("2125").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("2425").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1924").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1923").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1822").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("2425").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("1924").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("1923").addAttribute("avgSpeed", 5.6);
+        cityRoadMap.getEdge("1822").addAttribute("avgSpeed", 5.6);
         cityRoadMap.getEdge("2226").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("2327").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("2627").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("2627").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("2324").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("2223").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1819").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("2223").addAttribute("avgSpeed", 3.0);
+        cityRoadMap.getEdge("1819").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("816").addAttribute("avgSpeed", 5.0);
-        cityRoadMap.getEdge("1617").addAttribute("avgSpeed", 5.0);
+        cityRoadMap.getEdge("1617").addAttribute("avgSpeed", 3.0);
         cityRoadMap.getEdge("428").addAttribute("avgSpeed", 5.0);
         cityRoadMap.getEdge("2811").addAttribute("avgSpeed", 5.0);
         
@@ -482,11 +481,11 @@ public class MobilityMap {
     
     //riattesta il mobile host sulla nuova base station
     //inoltre aggiunge l'indirizzo del mobile host nel router
-    public void riattesta(String bs, int id_mh, Point2D position) {
+    public void riattesta(String bs, int id_mh, String station) {
     	Node n = cityRoadMap.getNode(bs);
     	String id_router = n.getAttribute("router");
     	Router r = routers.get(id_router);
-    	r.addMobileHost(id_mh, position);
+    	r.addMobileHost(id_mh, station);
     }
 
     public boolean validatePos(String id, double x, double y) {

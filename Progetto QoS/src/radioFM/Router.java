@@ -1,6 +1,5 @@
 package radioFM;
 
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -28,7 +27,7 @@ public class Router{
 	 * dopodiche la frequenza verra inviata dal router al mobile host
 	*/
 	
-	protected HashMap<Integer,Point2D> cache;
+	protected HashMap<Integer,String> cache;
 	protected HashMap<Integer,Double> ttl;
 	
 	protected Router uplink;
@@ -78,7 +77,7 @@ public class Router{
 
 	}
 	
-	public HashMap<Integer,Point2D> getCache(){
+	public HashMap<Integer,String> getCache(){
 		return cache;
 	}
 	
@@ -94,7 +93,7 @@ public class Router{
 		return id;
 	}
 	
-	public synchronized void addMobileHost(int id_mh, Point2D position) {
+	public synchronized void addMobileHost(int id_mh, String station) {
 		if(numConnessioni < capacita) {
 			numConnessioni++;
 		}
@@ -125,10 +124,10 @@ public class Router{
 			}
 		}
 		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
-		cache.put(id_mh, position);
+		cache.put(id_mh, station);
 		ttl.put(id_mh, s.orologio.getCurrent_Time());
 		if(uplink != null) {
-			uplink.addMobileHost(id_mh, position);
+			uplink.addMobileHost(id_mh, station);
 		}
 	}
 	

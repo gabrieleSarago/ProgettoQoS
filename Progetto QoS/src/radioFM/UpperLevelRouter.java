@@ -51,7 +51,7 @@ public class UpperLevelRouter extends Router {
 			removable.clear();
 			removable = null;
 			/*
-			 * Periodo di refresh di 9 secondi
+			 * Periodo di refresh di 50 millisecondi
 			 */
 			m.shifta(ROUTE_TIMEOUT);
 			m.setDestinazione((Router)this);

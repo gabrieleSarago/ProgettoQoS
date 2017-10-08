@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 public class Statistica {
 	
 	private static int tot_pacchetti = 0;
+	//numero mobile host che hanno subito perdite
 	private static int numMobileHost = 0;
 	private static double med_latenze = 0;
 	private static double prob = 0;

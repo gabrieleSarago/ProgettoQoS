@@ -148,11 +148,21 @@ and open the template in the editor.
          exitAt = istante iniziale dal quale il generatore inizierà a fare pull di veicoli all'interno del sistema
          generation rate = rate di generazione espresso in veicoli al minuto
     -->
-    <!-- bisogna creare più pozzi che generano mobile host-->
-    <pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="100" showUI = "0">
+    
+    <pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
     </pozzo>
-    
-    
+    <pozzo gateway = "0" nodo_ingresso="2" nodo_uscita="15" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
+    </pozzo>
+    <pozzo gateway = "0" nodo_ingresso="8" nodo_uscita="27" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
+    </pozzo>
+    <pozzo gateway = "0" nodo_ingresso="3" nodo_uscita="5" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
+    </pozzo>
+    <pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="10" showUI = "0">
+    </pozzo>
+    <pozzo gateway = "0" nodo_ingresso="17" nodo_uscita="28" exitAt="0" generationRate="2" maxVehicles="10" showUI = "0">
+    </pozzo>
+    <pozzo gateway = "0" nodo_ingresso="26" nodo_uscita="21" exitAt="0" generationRate="2" maxVehicles="10" showUI = "0">
+    </pozzo>
     
 <!--    
     <router id="2" gateway="4" net_size="5">
