@@ -20,12 +20,6 @@ public class Router{
 	protected final double ROUTE_TIMEOUT = 50.0;
 	//500 millisecondi
 	protected final double PAGING_TIMEOUT = 500.0;
-	//associazione (id , posizione mobile host) - time to live
-	/*
-	 * TODO Aggiungere una struttura dati id - stazione radio FM.
-	 * Non si aggiungono le frequenze radio poiche basta una stringa attestante il nome della stazione
-	 * dopodiche la frequenza verra inviata dal router al mobile host
-	*/
 	
 	protected HashMap<Integer,String> cache;
 	protected HashMap<Integer,Double> ttl;
@@ -123,7 +117,7 @@ public class Router{
 				capacita_paging--;
 			}
 		}
-		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
+		System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
 		cache.put(id_mh, station);
 		ttl.put(id_mh, s.orologio.getCurrent_Time());
 		if(uplink != null) {
@@ -132,7 +126,7 @@ public class Router{
 	}
 	
 	public synchronized void removeMobileHost(int id_mh) {
-		//System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
+		System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
 		cache.remove(id_mh);
 		ttl.remove(id_mh);
 		if(uplink != null) {

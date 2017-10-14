@@ -7,8 +7,8 @@ package radioFM;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.jdom2.Document;
@@ -97,7 +97,22 @@ public class Main_app {
 
     @SuppressWarnings("rawtypes")
 	private boolean startParsing(File xmlFile) {
-        roadMap = new MobilityMap();
+    	double radius = 100.02;
+        double startX = 0.0;
+        double startY = 0.0;
+    	
+        roadMap = new MobilityMap(s, radius, startX, startY);
+        //Avvio dei router
+        for(Entry<String, Router> e : roadMap.routers.entrySet()){
+        	e.getValue().start();
+        }
+        //Avvio dei router di primo livello
+        for(Entry<String, UpperLevelRouter> e : roadMap.ul_routers.entrySet()){
+        	e.getValue().start();
+        }
+        //avvio del gateway
+        roadMap.getGateway().start();
+        
         SAXBuilder saxBuilder = new SAXBuilder();
         boolean res = false;
         try {
@@ -129,68 +144,6 @@ public class Main_app {
 
                     info.addCanale(c);
                 }
-            }
-
-            /*associazione router - base station, ogni base station
-             * ha un attributo che identifica il router che la gestisce.
-             */
-            listElement = rootElement.getChildren("router");
-            for(Object nodo : listElement) {
-            	String id = ((Element) nodo).getAttributeValue("id");
-            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
-            	//Si aggiungono i router di 2� livello nella lista della MobilityMap
-            	Router r = new Router(s, id, capacita, roadMap);
-            	roadMap.addRouter(id, r);
-            	r.start();
-            	List listElement1 = ((Element) nodo).getChildren("base_station");
-            	for(Object n : listElement1) {
-            		String bs = ((Element) n).getText();
-            		if(roadMap.cityRoadMap.getNode(bs).getAttribute("router") == null)
-            			roadMap.cityRoadMap.getNode(bs).addAttribute("router", id);
-            		else
-            			roadMap.cityRoadMap.getNode(bs).setAttribute("router", id);
-            	}
-            }
-            
-            //generazione router di 1� livello
-            listElement = rootElement.getChildren("first_router");
-            for(Object nodo: listElement) {
-            	String id = ((Element) nodo).getAttributeValue("id");
-            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
-            	UpperLevelRouter fr = new UpperLevelRouter(s, id, capacita, roadMap);
-            	List listElement1 = ((Element) nodo).getChildren("r");
-            	LinkedList<Router> downlink_routers = new LinkedList<>();
-            	for(Object n : listElement1) {
-            		String rID = ((Element) n).getText();
-            		//connessioni downlink
-            		downlink_routers.add(roadMap.getRouter(rID));
-            		//connessioni uplink
-            		roadMap.getRouter(rID).setUplink(fr);
-            	}
-            	roadMap.addFirstRouter(id, fr);
-            	fr.addRouters(downlink_routers);
-            	fr.start();
-            }
-            
-            //generazione router gateway
-            //NOTA: il gateway non ha connessioni uplink
-            listElement = rootElement.getChildren("gateway_router");
-            for(Object nodo: listElement) {
-            	String id = ((Element) nodo).getAttributeValue("id");
-            	int capacita = Integer.parseInt(((Element) nodo).getAttributeValue("cp"));
-            	UpperLevelRouter gr = new UpperLevelRouter(s, id, capacita, roadMap);
-            	List listElement1 = ((Element) nodo).getChildren("fr");
-            	LinkedList<Router> downlink_routers = new LinkedList<>();
-            	for(Object n : listElement1) {
-            		String frID = ((Element) n).getText();
-            		//connessioni downlink gateway-first_level
-            		downlink_routers.add(roadMap.getFirstRouter(frID));
-            		//connessioni uplink first_level-gateway
-            		roadMap.getFirstRouter(frID).setUplink(gr);
-            	}
-            	roadMap.addFirstRouter(id, gr);
-            	gr.addRouters(downlink_routers);
-            	gr.start();
             }
             
             int lastNodeId = 1000;

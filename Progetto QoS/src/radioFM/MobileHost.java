@@ -470,7 +470,7 @@ public class MobileHost extends nodo_host {
     	//e come se bisognasse riattestarsi alla prima BS
     	//quindi generation = true
     	verificaRiattestazione(true);
-    	//System.out.println("notifica riattestazione router = "+id_router);
+    	System.out.println("notifica riattestazione router = "+id_router);
     	//Non c'e bisogno di richiedere la rimozione di informazioni
     	//perche sono gia state rimosse
     	//corrisponde al route message
