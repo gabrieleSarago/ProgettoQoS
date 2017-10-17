@@ -46,7 +46,7 @@ and open the template in the editor.
          generation rate = rate di generazione espresso in veicoli al minuto
     -->
     
-    <pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
+    <!--pozzo gateway = "0" nodo_ingresso="1" nodo_uscita="20" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
     </pozzo>
     <pozzo gateway = "0" nodo_ingresso="2" nodo_uscita="15" exitAt="0" generationRate="2" maxVehicles="20" showUI = "0">
     </pozzo>
@@ -59,7 +59,7 @@ and open the template in the editor.
     <pozzo gateway = "0" nodo_ingresso="17" nodo_uscita="28" exitAt="0" generationRate="2" maxVehicles="10" showUI = "0">
     </pozzo>
     <pozzo gateway = "0" nodo_ingresso="26" nodo_uscita="21" exitAt="0" generationRate="2" maxVehicles="10" showUI = "0">
-    </pozzo>
+    </pozzo-->
     
 <!--    
     <router id="2" gateway="4" net_size="5">

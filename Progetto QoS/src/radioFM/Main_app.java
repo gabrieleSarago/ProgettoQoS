@@ -18,7 +18,6 @@ import org.jdom2.input.SAXBuilder;
 
 import Mobility.Mh_node;
 import Mobility.MobilityMap;
-import base_simulator.Grafo;
 import base_simulator.Infos;
 import base_simulator.canale;
 import base_simulator.link_extended;
@@ -38,8 +37,6 @@ public class Main_app {
     	s = new scheduler(1200000, false);
     }
     
-    private String[] stazioni = {"RDS","RTL 102.5", "RAI RADIO 1", "RAI RADIO 2", "RAI RADIO 3", "RADIO DEEJAY"};
-
     /**
      * Creates new form main_app
      */
@@ -100,8 +97,15 @@ public class Main_app {
     	double radius = 100.02;
         double startX = 0.0;
         double startY = 0.0;
+        int numNodi = 10;
+        //3.0 => 1.5 km/100 sec => 54 km/h
+        //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
+        //11.2 => 5.6 km/100 sec => circa 200 km/h
+        //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
+        double maxSpeed = 11.2;
+        double minSpeed = 3.0;
     	
-        roadMap = new MobilityMap(s, radius, startX, startY);
+        roadMap = new MobilityMap(s, radius, startX, startY, numNodi, minSpeed, maxSpeed);
         //Avvio dei router
         for(Entry<String, Router> e : roadMap.routers.entrySet()){
         	e.getValue().start();
@@ -148,38 +152,37 @@ public class Main_app {
             
             int lastNodeId = 1000;
             int idCanale = 1;
-            listElement = rootElement.getChildren("pozzo");
             int counterNodeId = 1;
-            for (Object nodo : listElement) {
-                String nodo_ingresso = ((Element) nodo).getAttributeValue("nodo_ingresso");
-                String nodo_uscita = ((Element) nodo).getAttributeValue("nodo_uscita");
-                double exitGateAt = Double.parseDouble(((Element) nodo).getAttributeValue("exitAt"));
-                double generationRate = Double.parseDouble(((Element) nodo).getAttributeValue("generationRate"));
-                double maxVehicles = Double.parseDouble(((Element) nodo).getAttributeValue("maxVehicles"));
-                int gateway = Integer.valueOf(((Element) nodo).getAttributeValue("gateway"));
-                int showUI = Integer.valueOf(((Element) nodo).getAttributeValue("showUI"));
+            int numMobHost = 10;
+            for (int j = 0; j < numMobHost; j++) {
+            	Random r = new Random();
+                String nodo_ingresso = "" + r.nextInt(numNodi);
+                String nodo_uscita = "" + r.nextInt(numNodi);
+                while(nodo_ingresso.equals(nodo_uscita)){
+                	nodo_uscita =  "" + r.nextInt(numNodi);
+                }
+                double exitGateAt = 0.0;
+                double generationRate = 2.0;
+                double maxVehicles = 10.0;
+                int gateway = 0;
+                int showUI = 0;
 
                 double interExitTime = 60000.0 / generationRate;
 
-                int vehicleCounter = 0;
-                for (vehicleCounter = 0; vehicleCounter < maxVehicles; vehicleCounter++) {
+                for (int vehicleCounter = 0; vehicleCounter < maxVehicles; vehicleCounter++) {
 
                     int id = lastNodeId + counterNodeId;
                     counterNodeId++;
                     
-                    Grafo grafo = new Grafo(5);
+                    //Grafo grafo = new Grafo(5);
                     
                     Physical80211P pl = new Physical80211P(s, 0.0);
                     LinkLayer ll = new LinkLayer(s, 5.0);
-                    waveNetLayer nl = new waveNetLayer(s, 5.0, grafo,showUI);
+                    waveNetLayer nl = new waveNetLayer(s, 5.0,/*grafo*/ null,showUI);
                     waveFSCTPTransportLayer tl = new waveFSCTPTransportLayer(s, 5.0);
                     
-                    //Scelta stazione radio casuale
-                    int i = (new Random()).nextInt(stazioni.length);
-                    String station_name = stazioni[i];
-                    System.out.println(station_name);
-                    
-                    MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, station_name);
+                    //previsto dato da inserire
+                    MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, null);
                     
                     nh.setMappa(roadMap);
                     nh.setNodo_ingresso(nodo_ingresso);
@@ -303,7 +306,6 @@ public class Main_app {
                     if (tipo.equals("full")) {
                         link_extended l1 = new link_extended(nodo_finale, nodo_iniziale, metric);
                         info.addLink(l1);
-
                     }
                 }
             }

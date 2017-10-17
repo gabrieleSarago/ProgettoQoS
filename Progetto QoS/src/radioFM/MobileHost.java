@@ -5,7 +5,7 @@
  */
 package radioFM;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.graphstream.algorithm.Dijkstra;
@@ -56,7 +56,7 @@ public class MobileHost extends nodo_host {
     //espresso in KByte
     private final int PACKET_SIZE = 1526;
     //stazione radio scelta dal mobile host
-    private String stazione;
+    private String ip;
     
     //inizio zona di handover
     private boolean handover = false;
@@ -88,12 +88,12 @@ public class MobileHost extends nodo_host {
     Graph mappa;
     Dijkstra dijkstra;
 
-    ArrayList<Node> list1;
+    List<Node> list1;
     private canale my_wireless_channel;
     
     private boolean carIsPowerOff = true;
     private String POWER_OFF = "car power off";
-        
+
     public canale getMy_wireless_channel() {
         return my_wireless_channel;
     }
@@ -104,13 +104,13 @@ public class MobileHost extends nodo_host {
 
     public MobileHost(scheduler s, int id_nodo, physicalLayer myPhyLayer, LinkLayer myLinkLayer, NetworkLayer myNetLayer, TransportLayer myTransportLayer, Grafo network, String tipo, int gtw) {
         super(s, id_nodo, myPhyLayer, myLinkLayer, myNetLayer, myTransportLayer, network, tipo, gtw);
-        dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
+        dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "lenght");
     }
     
-    public MobileHost(scheduler s, int id_nodo, physicalLayer myPhyLayer, LinkLayer myLinkLayer, NetworkLayer myNetLayer, TransportLayer myTransportLayer, Grafo network, String tipo, int gtw, String stazione) {
+    public MobileHost(scheduler s, int id_nodo, physicalLayer myPhyLayer, LinkLayer myLinkLayer, NetworkLayer myNetLayer, TransportLayer myTransportLayer, Grafo network, String tipo, int gtw, String ip) {
         super(s, id_nodo, myPhyLayer, myLinkLayer, myNetLayer, myTransportLayer, network, tipo, gtw);
-        this.stazione = stazione;
-        dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "length");
+        this.ip = ip;
+        dijkstra = new Dijkstra(Dijkstra.Element.EDGE, null, "lenght");
     }
 
     public String getNodo_ingresso() {
@@ -138,12 +138,12 @@ public class MobileHost extends nodo_host {
         this.mappa = mappa.cityRoadMap;
     }
 
-    public String getStazione() {
-		return stazione;
+    public String getIp() {
+		return ip;
 	}
 
-	public void setStazione(String stazione) {
-		this.stazione = stazione;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	
 	public boolean eAttivo() {
@@ -207,13 +207,9 @@ public class MobileHost extends nodo_host {
             dijkstra.init(mappa);
             dijkstra.setSource(mappa.getNode(nodo_ingresso));
             dijkstra.compute();
-
+            list1 = dijkstra.getPath(mappa.getNode(nodo_uscita)).getNodePath();
             index_nodo_attuale = 0;
-            list1 = new ArrayList<Node>();
-            for (Node node : dijkstra.getPathNodes(mappa.getNode(nodo_uscita))) {
-                list1.add(0, node);
-            }
-
+            
             Node curr = list1.get(index_nodo_attuale);
             Object x1 = ((Object[]) curr.getAttribute("xy"))[0];
             Object y1 = ((Object[]) curr.getAttribute("xy"))[1];
@@ -222,15 +218,14 @@ public class MobileHost extends nodo_host {
             currY = Double.parseDouble("" + y1);
             
             currDistance = 0;
-            
             //se il mobile host entra nell'area di copertura di un'altra base station
             //allora notifica la sua presenza e il router lo registra
             //verificaZonaHandover();
             if(verificaRiattestazione(true)) {
             	//non e necessario rimuovere informazioni dato che ancora non ce ne sono
             	//route message
-            	cityMap.riattesta(currBS, id_nodo, stazione);
-            	System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
+            	cityMap.riattesta(currBS, id_nodo, ip);
+            	//System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
             	//riattesta
             }
             
@@ -257,11 +252,11 @@ public class MobileHost extends nodo_host {
                     double segment_length = Math.sqrt(xComp + yComp);
 
                     //Get average speed from cityMap by reading edge info
-                    String edge_label = curr.toString() + next.toString();
+                    String edge_label = curr.toString() +"-"+ next.toString();
                     Edge e = mappa.getEdge(edge_label);
                     
                     if(e == null) {
-                    	edge_label = next.toString() + curr.toString();
+                    	edge_label = next.toString() + "-" + curr.toString();
                     	e = mappa.getEdge(edge_label);
                     }
 
@@ -278,12 +273,12 @@ public class MobileHost extends nodo_host {
                     	cityMap.rimuoviMobileHost(id_router, id_nodo);
                     	//ci si riattesta sulla nuova bs
                     	//route message
-                    	cityMap.riattesta(currBS, id_nodo, stazione);
+                    	cityMap.riattesta(currBS, id_nodo, ip);
                 		//metodo che, dato il tempo totale trascorso nella zona intermedia,
                 		//verifica se tale tempo rispetta il tempo di Handover. Se non lo rispetta
                 		//bisogna calcolare quanti pacchetti perde
                 		verificaTempo();
-                    	System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
+                    	//System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
                     	//riattesta
                     }
 
@@ -409,7 +404,7 @@ public class MobileHost extends nodo_host {
                 //Se trova un'altra base station ma si trova in una zona intermendia di handover
                 //non restituisce nulla, questo perch� si sta gi� riattestando
                 else if(collisione && !handover) {
-                	System.out.println("inizio handover");
+                	//System.out.println("inizio handover");
                 	handover = true;
                 	numHandover++;
                 	currBS = n.getId();
@@ -420,7 +415,7 @@ public class MobileHost extends nodo_host {
     	}
     	//se non ci sono collisioni con altre bs ma handover = true allora siamo appena usciti dalla zona intermedia
     	if(nessunaCollisione && handover) {
-    		System.out.println("fine handover");
+    		//System.out.println("fine handover");
     		handover = false;
     	}
     	return false;
@@ -470,12 +465,12 @@ public class MobileHost extends nodo_host {
     	//e come se bisognasse riattestarsi alla prima BS
     	//quindi generation = true
     	verificaRiattestazione(true);
-    	System.out.println("notifica riattestazione router = "+id_router);
+    	//System.out.println("notifica riattestazione router = "+id_router);
     	//Non c'e bisogno di richiedere la rimozione di informazioni
     	//perche sono gia state rimosse
     	//corrisponde al route message
     	//ci si riattesta sulla nuova bs
-    	cityMap.riattesta(currBS, id_nodo, stazione);
+    	cityMap.riattesta(currBS, id_nodo, ip);
     }
     
     public void setExitFromGate(double exitGateAt) {

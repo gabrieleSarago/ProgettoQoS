@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.graphstream.algorithm.generator.DorogovtsevMendesGenerator;
+import org.graphstream.algorithm.generator.Generator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -47,12 +49,17 @@ public class MobilityMap {
     private double radius;
     private double startX;
     private double startY;
+    private int numNodi;
+    private double minSpeed, maxSpeed;
 
-    public MobilityMap(scheduler s, double radius, double startX, double startY) {
+    public MobilityMap(scheduler s, double radius, double startX, double startY, int numNodi, double minSpeed, double maxSpeed) {
     	this.s = s;
     	this.radius = radius;
     	this.startX = startX;
     	this.startY = startY;
+    	this.numNodi = numNodi;
+    	this.minSpeed = minSpeed;
+    	this.maxSpeed = maxSpeed;
     	
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
@@ -107,19 +114,6 @@ public class MobilityMap {
         pipe = v.newViewerPipe();
         pipe.addAttributeSink(cityRoadMap);
 
-        /*for (int i = 0; i < 100; i++) {
-            try {
-                Thread.sleep(100);
-                pipe.pump();
-                cityRoadMap.getNode("Car").setAttribute("xy",500+i,250+i);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MobilityMap.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
-        /*for (Node node : cityRoadMap) {
-            System.out.println(node.toString() + " Posizione (x,y) :" + node.getNumber("x") + "," + ((Object[]) node.getAttribute("xy"))[1]);
-        }*/
-
     }
     
     public UpperLevelRouter getGateway(){
@@ -133,6 +127,23 @@ public class MobilityMap {
     public void setCityRoadMap(Graph cityRoadMap) {
         this.cityRoadMap = cityRoadMap;
     }
+    
+    private int getEdgeLenght(Node n1, Node n2){
+    	Object x1 = ((Object[]) n1.getAttribute("xy"))[0];
+		Object y1 = ((Object[]) n1.getAttribute("xy"))[1];
+
+		Object x2 = ((Object[]) n2.getAttribute("xy"))[0];
+		Object y2 = ((Object[]) n2.getAttribute("xy"))[1];
+
+		double a1 = Double.parseDouble(""+x1);
+		double b1 = Double.parseDouble(""+y1);
+
+		double a2 = Double.parseDouble(""+x2);
+		double b2 = Double.parseDouble(""+y2);
+
+		int lenght = (int)Math.sqrt((a2-a1)*(a2-a1)+(b2-b1)*(b2-b1))/4;
+		return lenght;
+    }
 
     /**
      * Creamo la struttura della citta utilizzando una libreria graphStream per
@@ -141,67 +152,57 @@ public class MobilityMap {
      */
     public void createCityMap() {
         //Node represents the crossway among road
-        cityRoadMap = new SingleGraph("ColdRiver");
+        cityRoadMap = new SingleGraph("Random");
+        Generator gen = new DorogovtsevMendesGenerator();
+        gen.addSink(cityRoadMap);
+        gen.begin();
+        for(int i = 0; i < numNodi-3; i++){
+        	gen.nextEvents();
+        }
+        gen.end();
         
-        /*
-         * Si creano dei nodi di traffico casuali
-         */
-        int numNodi = 31;
-        Random random = new Random();
-        for(int i = 1; i < numNodi; i++){
-        	int x = random.nextInt(2000);
-        	int y = random.nextInt(1000);
-        	//verifica che non ci siano nodi nelle stesse posizioni
-        	boolean found = true;
-        	while(found){
-        		found = false;
-        		for(Node n : cityRoadMap){
-        			Object x1 = ((Object[]) n.getAttribute("xy"))[0];
-        			Object y1 = ((Object[]) n.getAttribute("xy"))[1];
-        			double a1 = Double.parseDouble(""+x1);
-        			double b1 = Double.parseDouble(""+y1);
-        			if(Math.abs(a1-x) <= 0.00001 && Math.abs(b1-y) <= 0.00001){
-        				x = random.nextInt(2000);
-        				y = random.nextInt(1000);
-        				found = true;
-        				break;
+        //posizione casuale dei nodi
+        for(Node n : cityRoadMap){
+        	int x = (new Random()).nextInt(2000);
+        	int y = (new Random()).nextInt(1000);
+        	boolean uguale = true;
+        	while(uguale){
+        		uguale = false;
+        		//verifica che non ci sia un altro nodo
+        		//con le stesse posizioni
+        		for(Node n1: cityRoadMap){
+        			if(n1.hasAttribute("xy")){
+        				Object a1 = ((Object []) n1.getAttribute("xy"))[0];
+        				Object b1 = ((Object []) n1.getAttribute("xy"))[1];
+        				double x1 = Double.parseDouble(""+a1);
+        				double y1 = Double.parseDouble(""+b1);
+        				if(Math.abs(x-x1) <= 0.00001 && Math.abs(y-y1)<= 0.00001){
+        					uguale = true;
+        					break;
+        				}
         			}
         		}
-        	}
-        	cityRoadMap.addNode(""+i);
-        	cityRoadMap.getNode(""+i).setAttribute("xy",x,y);
-        }
-        int currE = 1;
-        while(currE <= numNodi*2){
-        	String s1 = ""+(random.nextInt(numNodi-1)+1);
-        	String s2 = ""+(random.nextInt(numNodi-1)+1);
-        	if(!(cityRoadMap.getEdge(s1+s2) != null || cityRoadMap.getEdge(s2+s1) != null)){
-        		Node n1 = cityRoadMap.getNode(s1);
-        		Node n2 = cityRoadMap.getNode(s2);
-        		//per evitare di creare archi che partono e finiscono nello stesso nodo
-        		while(n1.getId().equals(n2.getId())){
-        			s2 = ""+(random.nextInt(numNodi-1)+1);
-        			n2 = cityRoadMap.getNode(s2);
+        		if(uguale){
+        			x = (new Random()).nextInt(2000);
+        			y = (new Random()).nextInt(1000);
         		}
-        		//crea l'arco, associando una determinata etichetta
-        		//per calcolare la lunghezza, si usa il teorema di Pitagora
-        		Object x1 = ((Object[]) n1.getAttribute("xy"))[0];
-        		Object y1 = ((Object[]) n1.getAttribute("xy"))[1];
-
-        		Object x2 = ((Object[]) n2.getAttribute("xy"))[0];
-        		Object y2 = ((Object[]) n2.getAttribute("xy"))[1];
-
-        		double a1 = Double.parseDouble(""+x1);
-        		double b1 = Double.parseDouble(""+y1);
-
-        		double a2 = Double.parseDouble(""+x2);
-        		double b2 = Double.parseDouble(""+y2);
-
-        		int lenght = (int)Math.sqrt((a2-a1)*(a2-a1)+(b2-b1)*(b2-b1))/2;
-        		cityRoadMap.addEdge(s1+s2, s1, s2).addAttribute("length", lenght);
-        		cityRoadMap.getEdge(s1+s2).addAttribute("avgSpeed", 11.2);
         	}
-        	currE++;
+        	n.setAttribute("xy", x, y);
+        }
+        
+        //aggiunta dei pesi agli archi
+        for(Edge e : cityRoadMap.getEachEdge()){
+        	Node n0 = e.getNode0();
+        	Node n1 = e.getNode1();
+        	int lenght = getEdgeLenght(n0, n1);
+        	e.addAttribute("lenght", lenght);
+        	//velocità in un certo range di valori
+        	double speed = (new Random()).nextDouble()*(maxSpeed-minSpeed)+minSpeed;
+        	e.addAttribute("avgSpeed", speed);
+        	if(!(e.getId().startsWith("AG") || e.getId().startsWith("GH") || e.getId().startsWith("HD") ||
+        			e.getId().startsWith("DE") || e.getId().startsWith("EF") || e.getId().startsWith("FA"))){
+        		e.addAttribute("label", ""+lenght);
+        	}
         }
         
         //cityRoadMap.addNode("1").addAttribute("ui.hide");
@@ -264,12 +265,12 @@ public class MobilityMap {
         //per colorare un arco
         //cityRoadMap.getEdge("AI").addAttribute("ui.style", "fill-color: red;");
 
-        for (Edge e : cityRoadMap.getEachEdge()) {
+        /*for (Edge e : cityRoadMap.getEachEdge()) {
         	if(!(e.getId().startsWith("AG") || e.getId().startsWith("GH") || e.getId().startsWith("HD") ||
         			e.getId().startsWith("DE") || e.getId().startsWith("EF") || e.getId().startsWith("FA"))){
         		e.addAttribute("label", "" + (int) e.getNumber("length"));
         	}
-        }
+        }*/
     }
     
     private Hexagon makeBS(int id_router, int id, double x, double y){
@@ -287,7 +288,7 @@ public class MobilityMap {
     				double Ox = Double.parseDouble(""+currx);
     				double Oy = Double.parseDouble(""+curry);
     				if(Math.abs(Ox-x) <= 0.000001 && Math.abs(Oy-y)<= 0.000001){
-    					System.out.println("B"+id+"XX = "+x+" Y = "+y);
+    					//System.out.println("B"+id+"XX = "+x+" Y = "+y);
     					id--;
     					return new Hexagon(id, x, y, radius);
     				}
@@ -375,11 +376,11 @@ public class MobilityMap {
     
     //riattesta il mobile host sulla nuova base station
     //inoltre aggiunge l'indirizzo del mobile host nel router
-    public void riattesta(String bs, int id_mh, String station) {
+    public void riattesta(String bs, int id_mh, String ip) {
     	Node n = cityRoadMap.getNode(bs);
     	String id_router = n.getAttribute("router");
     	Router r = routers.get(id_router);
-    	r.addMobileHost(id_mh, station);
+    	r.addMobileHost(id_mh, ip);
     }
 
     public boolean validatePos(String id, double x, double y) {

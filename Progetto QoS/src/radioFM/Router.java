@@ -87,7 +87,7 @@ public class Router{
 		return id;
 	}
 	
-	public synchronized void addMobileHost(int id_mh, String station) {
+	public synchronized void addMobileHost(int id_mh, String ip) {
 		if(numConnessioni < capacita) {
 			numConnessioni++;
 		}
@@ -117,16 +117,16 @@ public class Router{
 				capacita_paging--;
 			}
 		}
-		System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
-		cache.put(id_mh, station);
+		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
+		cache.put(id_mh, ip);
 		ttl.put(id_mh, s.orologio.getCurrent_Time());
 		if(uplink != null) {
-			uplink.addMobileHost(id_mh, station);
+			uplink.addMobileHost(id_mh, ip);
 		}
 	}
 	
 	public synchronized void removeMobileHost(int id_mh) {
-		System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
+		//System.out.println("Router = "+this.id+" rimozione mh = "+id_mh);
 		cache.remove(id_mh);
 		ttl.remove(id_mh);
 		if(uplink != null) {

@@ -40,10 +40,6 @@ public class Hexagon {
 		Ay = f[3];
 		Dx = f[2];
 		Dy = f[1];
-		System.out.println("first = "+Bx);
-		System.out.println(Ay);
-		System.out.println(Dx);
-		System.out.println(Dy);
 		//cerchio per trovate i restanti 2 punti
 		double a2 = -2*Fx;
 		double b2 = -2*Oy;
@@ -54,10 +50,6 @@ public class Hexagon {
 		Ay = f[3];
 		Ex = f[2];
 		Dy = f[1];
-		System.out.println("second = "+Ax);
-		System.out.println(Ay);
-		System.out.println(Ex);
-		System.out.println(Dy);
 	}
 	
 	private double[] intersezioneCirconferenze(double a, double b, double c, double a1, double b1, double c1) {
