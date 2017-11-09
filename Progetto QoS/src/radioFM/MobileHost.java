@@ -209,19 +209,8 @@ public class MobileHost extends nodo_host {
 
     @Override
     public void Handler(Messaggi m) {
-    	/*
-    	 * Quando inattivo aspetta un periodo UPDATE_POSITION_TIME*2
-    	 * e torna attivo
-    	 */
-    	if (m.getTipo_Messaggio().equals(INACTIVE)) {
-    		attivo = false;
-    		m.setTipo_Messaggio(UPDATE_POSITION);
-    		m.shifta(UPDATE_POSITION_TIME*2);
-    		m.setDestinazione(this);
-    		m.setSorgente(this);
-    	    s.insertMessage(m);
-    	}
-    	else if (m.getTipo_Messaggio().equals(START_ROAD_RUN)) {
+    	
+    	if (m.getTipo_Messaggio().equals(START_ROAD_RUN)) {
     		attivo = true;
             carIsPowerOff = false;
             tempo_inizio = s.orologio.getCurrent_Time();
@@ -257,7 +246,6 @@ public class MobileHost extends nodo_host {
             s.insertMessage(m);
 
         } else if (m.getTipo_Messaggio().equals(UPDATE_POSITION)) {
-        	attivo = true;
             if (!nodo_ingresso.equals(nodo_uscita)) {
                 if (index_nodo_attuale < list1.size() - 1) {                    
                     Node curr = list1.get(index_nodo_attuale);
@@ -291,9 +279,11 @@ public class MobileHost extends nodo_host {
                     if(verificaRiattestazione(false)) {
                     	//si rimuovono le informazioni del mobile host dal router
                     	//che gestisce la vecchia BS
+                    	//pacchetto beacon
                     	cityMap.rimuoviMobileHost(id_router, id_nodo);
                     	//ci si riattesta sulla nuova bs
-                    	//route update message
+                    	//route update packet di risposta al beacon
+                    	//se il MH è passivo si tratta di un paging update packet
                     	cityMap.riattesta(currBS, id_nodo, ip);
                 		//metodo che verifica quanto tempo impiega la procedura di handoff
                     	//e in base al tempo impiegato viene calcolata la perdita di pacchetti
@@ -314,15 +304,18 @@ public class MobileHost extends nodo_host {
                         index_nodo_attuale++;
                         waitingTime = STOP_WAITING_TIME;
                         //numero casuale tra 0 e 10
-                    	//probabilitï¿½ del 20% che il mobile host diventa inattivo
-                    	if((new Random()).nextInt(11) <= 2) {
+                    	//probabilita del 20% che il mobile host diventa inattivo
+                    	/*
+                    	 * Ogni volta che il MH attraversa un nodo di traffico
+                    	 * decide se essere passivo o attivo. In questo modo il MH mantiene uno stato
+                    	 * per un certo periodo di tempo e decide se cambiarlo o meno in modo casuale.
+                    	 */
+                        if((new Random()).nextInt(11) <= 2) {
                     		System.out.println("inattivo!");
-                    		m.setTipo_Messaggio(INACTIVE);
-                            m.shifta(waitingTime);
-                            m.setDestinazione(this);
-                            m.setSorgente(this);
-                            s.insertMessage(m);
-                            return;
+                    		attivo = false;
+                    	}
+                    	else {
+                    		attivo = true;
                     	}
                         //System.out.println("nodo " + this.getId() + " Arrivato su incrocio " + next + " al tempo " + s.orologio.getCurrent_Time());
                         
@@ -483,6 +476,7 @@ public class MobileHost extends nodo_host {
     	//perche sono gia state rimosse
     	//corrisponde al route message
     	//ci si riattesta sulla nuova bs
+    	//route-update packet di risposta al pacchetto beacon
     	cityMap.riattesta(currBS, id_nodo, ip);
     }
     

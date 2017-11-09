@@ -38,21 +38,21 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		//Mappa
 		JPanel mappa = new JPanel(new SpringLayout());
 		
-		JLabel r = new JLabel("Raggio", JLabel.TRAILING);
+		JLabel r = new JLabel("Raggio (in metri)", JLabel.TRAILING);
 		raggio = new JTextField();
 		raggio.setMaximumSize(new Dimension(width, 20));
 		r.setLabelFor(raggio);
 		mappa.add(r);
 		mappa.add(raggio);
 		
-		JLabel l = new JLabel("Larghezza", JLabel.TRAILING);
+		JLabel l = new JLabel("Larghezza (in metri)", JLabel.TRAILING);
 		larghezza = new JTextField();
 		larghezza.setMaximumSize(new Dimension(width, 20));
 		l.setLabelFor(larghezza);
 		mappa.add(l);
 		mappa.add(larghezza);
 		
-		JLabel a = new JLabel("Altezza", JLabel.TRAILING);
+		JLabel a = new JLabel("Altezza (in metri)", JLabel.TRAILING);
 		altezza = new JTextField();
 		altezza.setMaximumSize(new Dimension(width, 20));
 		a.setLabelFor(altezza);
@@ -74,14 +74,14 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		//Mobile Host
 		JPanel mh = new JPanel(new SpringLayout());
 		
-		JLabel velocita_max = new JLabel("Velocità massima", JLabel.TRAILING);
+		JLabel velocita_max = new JLabel("Velocità massima (km/h)", JLabel.TRAILING);
 		v_max = new JTextField();
 		v_max.setMaximumSize(new Dimension(width, 20));
 		velocita_max.setLabelFor(v_max);
 		mh.add(velocita_max);
 		mh.add(v_max);
 		
-		JLabel velocita_min = new JLabel("Velocità minima", JLabel.TRAILING);
+		JLabel velocita_min = new JLabel("Velocità minima (km/h)", JLabel.TRAILING);
 		v_min = new JTextField();
 		v_min.setMaximumSize(new Dimension(width, 20));
 		velocita_min.setLabelFor(v_min);
@@ -95,7 +95,7 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		mh.add(numMh);
 		mh.add(m);
 		
-		JLabel rate = new JLabel("Numero di MH generati in 1 secondo", JLabel.TRAILING);
+		JLabel rate = new JLabel("Numero di MH generati al secondo", JLabel.TRAILING);
 		ra = new JTextField();
 		ra.setMaximumSize(new Dimension(width, 20));
 		rate.setLabelFor(ra);
@@ -110,21 +110,21 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		//Mobility Agent
 		JPanel ma = new JPanel(new SpringLayout());
 		
-		JLabel capacitaG = new JLabel("Capacità GMA", JLabel.TRAILING);
+		JLabel capacitaG = new JLabel("Capacità GMA (Kbps)", JLabel.TRAILING);
 		cg = new JTextField();
 		cg.setMaximumSize(new Dimension(width, 20));
 		capacitaG.setLabelFor(cg);
 		ma.add(capacitaG);
 		ma.add(cg);
 		
-		JLabel capacita = new JLabel("Capacità MA", JLabel.TRAILING);
+		JLabel capacita = new JLabel("Capacità MA (Kbps)", JLabel.TRAILING);
 		c = new JTextField();
 		c.setMaximumSize(new Dimension(width, 20));
 		capacita.setLabelFor(c);
 		ma.add(capacita);
 		ma.add(c);
 		
-		JLabel perPaging = new JLabel("Percentuali capacità di paging", JLabel.TRAILING);
+		JLabel perPaging = new JLabel("Percentuale capacità di paging (compresa tra 0 e 1)", JLabel.TRAILING);
 		pg = new JTextField();
 		pg.setMaximumSize(new Dimension(width, 20));
 		perPaging.setLabelFor(pg);
@@ -139,42 +139,42 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		//Protocollo
 		JPanel pr = new JPanel(new SpringLayout());
 		
-		JLabel timeHandoff_max = new JLabel("Latenza Handoff massima", JLabel.TRAILING);
+		JLabel timeHandoff_max = new JLabel("Latenza Handoff massima (in secondi)", JLabel.TRAILING);
 		t_max = new JTextField();
 		t_max.setMaximumSize(new Dimension(width, 20));
 		timeHandoff_max.setLabelFor(t_max);
 		pr.add(timeHandoff_max);
 		pr.add(t_max);
 		
-		JLabel timeHandoff_min = new JLabel("Latenza Handoff minima", JLabel.TRAILING);
+		JLabel timeHandoff_min = new JLabel("Latenza Handoff minima (in secondi)", JLabel.TRAILING);
 		t_min = new JTextField();
 		t_min.setMaximumSize(new Dimension(width, 20));
 		timeHandoff_min.setLabelFor(t_min);
 		pr.add(timeHandoff_min);
 		pr.add(t_min);
 		
-		JLabel avgRate = new JLabel("Velocità di trasmissione per ogni MH", JLabel.TRAILING);
+		JLabel avgRate = new JLabel("Velocità di trasmissione per ogni MH (Kbps)", JLabel.TRAILING);
 		avg = new JTextField();
 		avg.setMaximumSize(new Dimension(width, 20));
 		avgRate.setLabelFor(avg);
 		pr.add(avgRate);
 		pr.add(avg);
 		
-		JLabel packet = new JLabel("Dimensione del pacchetto", JLabel.TRAILING);
+		JLabel packet = new JLabel("Dimensione del pacchetto (Byte)", JLabel.TRAILING);
 		ps = new JTextField();
 		ps.setMaximumSize(new Dimension(width, 20));
 		packet.setLabelFor(ps);
 		pr.add(packet);
 		pr.add(ps);
 		
-		JLabel routeUpdate = new JLabel("Tempo di aggiornamento del percorso attivo", JLabel.TRAILING);
+		JLabel routeUpdate = new JLabel("route-timeout (in ms)", JLabel.TRAILING);
 		ru = new JTextField();
 		ru.setMaximumSize(new Dimension(width, 20));
 		routeUpdate.setLabelFor(ru);
 		pr.add(routeUpdate);
 		pr.add(ru);
 		
-		JLabel pagingUpdate = new JLabel("Tempo di aggiornamento del percorso passivo", JLabel.TRAILING);
+		JLabel pagingUpdate = new JLabel("paging-timeout (in ms)", JLabel.TRAILING);
 		pu = new JTextField();
 		pu.setMaximumSize(new Dimension(width, 20));
 		pagingUpdate.setLabelFor(pu);

@@ -8,7 +8,7 @@ import Mobility.MobilityMap;
 import base_simulator.Messaggi;
 import base_simulator.scheduler;
 
-public class Router{
+public class MA{
 	
 	private String id;
 	private int capacita, capacita_paging;
@@ -16,15 +16,15 @@ public class Router{
 	protected scheduler s;
 	protected MobilityMap map;
 	protected final String REFRESH = "check";
-	protected double routeUpdateTime;
-	protected double pagingUpdateTime;
+	protected double routeTimeout;
+	protected double pagingTimeout;
 	
 	protected HashMap<Integer,String> cache;
 	protected HashMap<Integer,Double> ttl;
 	
-	protected Router uplink;
+	protected MA uplink;
 	
-	public Router(scheduler s, String id, int capacita, double pPaging, MobilityMap m) {
+	public MA(scheduler s, String id, int capacita, double pPaging, MobilityMap m) {
 		this.s = s;
 		this.id = id;
 		this.capacita = capacita;
@@ -43,8 +43,8 @@ public class Router{
 			for(Entry<Integer,Double> e : ttl.entrySet()) {
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
-				//se il ttl e scaduto ed e attivo o non attivo
-				if(mh.eAttivo() && diff >= routeUpdateTime || !(mh.eAttivo()) && diff >= pagingUpdateTime) {
+				//se il ttl e scaduto, qualunque sia lo statp del MH (attivo o passivo)
+				if(mh.eAttivo() && diff >= routeTimeout || !(mh.eAttivo()) && diff >= pagingTimeout) {
 					//aggiungi ai candidati per il refresh
 					removable.add(e.getKey());
 				}
@@ -53,6 +53,7 @@ public class Router{
 				//elimina la route dalle strutture dati
 				removeMobileHost(id);
 				//notifica il mobile host di riattestarsi
+				//pacchetto beacon
 				MobileHost mh = map.mobHost.get(id);
 				mh.notificaRiattesta();
 			}
@@ -61,9 +62,9 @@ public class Router{
 			/*
 			 * Periodo di refresh di 50 millisecondi
 			 */
-			m.shifta(routeUpdateTime);
-			m.setDestinazione((Router)this);
-            m.setSorgente((Router)this);
+			m.shifta(routeTimeout);
+			m.setDestinazione((MA)this);
+            m.setSorgente((MA)this);
             s.insertMessage(m);
 		}
 
@@ -77,7 +78,7 @@ public class Router{
 		return ttl;
 	}
 	
-	public void setUplink(Router uplink) {
+	public void setUplink(MA uplink) {
 		this.uplink = uplink;
 	}
 	
@@ -85,12 +86,12 @@ public class Router{
 		return id;
 	}
 	
-	public void setRouteUpdateTime(double time) {
-		routeUpdateTime = time;
+	public void setRouteTimeout(double time) {
+		routeTimeout = time;
 	}
 	
-	public void setPagingUpdateTime(double time) {
-		pagingUpdateTime = time;
+	public void setPagingTimeout(double time) {
+		pagingTimeout = time;
 	}
 	
 	public synchronized void addMobileHost(int id_mh, String ip) {

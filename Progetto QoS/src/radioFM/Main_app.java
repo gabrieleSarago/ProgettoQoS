@@ -89,14 +89,17 @@ public class Main_app {
 
     @SuppressWarnings("rawtypes")
 	private boolean startSimulation(File xmlFile) {
-    	double radius = frame.radius;
+    	//conversione da metri a unita grafiche
+    	double radius = frame.radius*2;
         int numNodi = frame.numNodi;
         //3.0 => 1.5 km/100 sec => 54 km/h
         //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
         //11.2 => 5.6 km/100 sec => circa 200 km/h
         //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
-        double maxSpeed = frame.speedMax;
-        double minSpeed = frame.speedMin;
+        
+        //conversione da km/h a unita grafica/100sec
+        double maxSpeed = frame.speedMax/36*2;
+        double minSpeed = frame.speedMin/36*2;
         //espressi in secondi
         double minHandoff = frame.minTimeHandoff;
         double maxHandoff = frame.maxTimeHandoff;
@@ -114,8 +117,8 @@ public class Main_app {
     	int capacitaMA = frame.capacitaMA;
     	double pPaging = frame.pPaging;
     	//mappa
-    	int width = frame.width;
-    	int height = frame.height;
+    	int width = frame.width*2;
+    	int height = frame.height*2;
     	
     	/*double radius = 100.02;
         int numNodi = 10;
@@ -144,20 +147,20 @@ public class Main_app {
     	int height = 1000;*/
         roadMap = new MobilityMap(s, radius, width, height, numNodi, minSpeed, maxSpeed, capacitaGMA, capacitaMA, pPaging);
         //Avvio dei router
-        for(Entry<String, Router> e : roadMap.routers.entrySet()){
-        	e.getValue().setRouteUpdateTime(routeUpdateTime);
-        	e.getValue().setPagingUpdateTime(pagingUpdateTime);
+        for(Entry<String, MA> e : roadMap.mobility_agents.entrySet()){
+        	e.getValue().setRouteTimeout(routeUpdateTime);
+        	e.getValue().setPagingTimeout(pagingUpdateTime);
         	e.getValue().start();
         }
         //Avvio dei router di primo livello
-        for(Entry<String, UpperLevelRouter> e : roadMap.ul_routers.entrySet()){
-        	e.getValue().setRouteUpdateTime(routeUpdateTime);
-        	e.getValue().setPagingUpdateTime(pagingUpdateTime);
+        for(Entry<String, UpperLevelMA> e : roadMap.ul_mobility_agents.entrySet()){
+        	e.getValue().setRouteTimeout(routeUpdateTime);
+        	e.getValue().setPagingTimeout(pagingUpdateTime);
         	e.getValue().start();
         }
         //avvio del gateway
-        roadMap.getGateway().setRouteUpdateTime(routeUpdateTime);
-        roadMap.getGateway().setPagingUpdateTime(pagingUpdateTime);
+        roadMap.getGateway().setRouteTimeout(routeUpdateTime);
+        roadMap.getGateway().setPagingTimeout(pagingUpdateTime);
         roadMap.getGateway().start();
         
         SAXBuilder saxBuilder = new SAXBuilder();

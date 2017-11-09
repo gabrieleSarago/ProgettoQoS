@@ -13,11 +13,11 @@ import base_simulator.scheduler;
  *
  */
 
-public class UpperLevelRouter extends Router {
+public class UpperLevelMA extends MA {
 	
-	private LinkedList<Router> downlink_routers;
+	private LinkedList<MA> downlink_routers;
 	
-	public UpperLevelRouter(scheduler s,String id, int capacita, double pPaging, MobilityMap m) {
+	public UpperLevelMA(scheduler s,String id, int capacita, double pPaging, MobilityMap m) {
 		super(s, id, capacita, pPaging, m);
 	}
 	
@@ -30,14 +30,14 @@ public class UpperLevelRouter extends Router {
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
 				//se il ttl e scaduto
-				if(mh.eAttivo() && diff >= routeUpdateTime) {
+				if(mh.eAttivo() && diff >= routeTimeout) {
 					//elimina la route dalle strutture dati
 					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
 					mh.notificaRiattesta();
 				}
 				//ttl scaduto e non e attivo il mobile host
-				if(!(mh.eAttivo()) && diff >= pagingUpdateTime) {
+				if(!(mh.eAttivo()) && diff >= pagingTimeout) {
 					//elimina la route dalle strutture dati
 					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
@@ -51,21 +51,21 @@ public class UpperLevelRouter extends Router {
 			removable.clear();
 			removable = null;
 			
-			m.shifta(routeUpdateTime);
-			m.setDestinazione((Router)this);
-            m.setSorgente((Router)this);
+			m.shifta(routeTimeout);
+			m.setDestinazione((MA)this);
+            m.setSorgente((MA)this);
             s.insertMessage(m);
 		}
 
 	}
 	
-	public synchronized void addRouters(LinkedList<Router> down) {
+	public synchronized void addRouters(LinkedList<MA> down) {
 		downlink_routers = down;
 		/*
 		 * vengono salvati i record dei router downlink
 		 * in modo da stabilire la connessione
 		 */
-		for(Router r : downlink_routers) {
+		for(MA r : downlink_routers) {
 			cache.putAll(r.getCache());
 			ttl.putAll(r.getTtl());
 		}
