@@ -47,16 +47,17 @@ public class MobilityMap {
     ProxyPipe pipe;
     
     private double radius;
-    private double startX;
-    private double startY;
+    private int lenght;
+    private int height;
     private int numNodi;
     private double minSpeed, maxSpeed;
+    private double handoffDistance;
 
-    public MobilityMap(scheduler s, double radius, double startX, double startY, int numNodi, double minSpeed, double maxSpeed) {
+    public MobilityMap(scheduler s, double radius, int lenght, int height, int numNodi, double minSpeed, double maxSpeed) {
     	this.s = s;
     	this.radius = radius;
-    	this.startX = startX;
-    	this.startY = startY;
+    	this.lenght = lenght;
+    	this.height = height;
     	this.numNodi = numNodi;
     	this.minSpeed = minSpeed;
     	this.maxSpeed = maxSpeed;
@@ -163,8 +164,8 @@ public class MobilityMap {
         
         //posizione casuale dei nodi
         for(Node n : cityRoadMap){
-        	int x = (new Random()).nextInt(2000);
-        	int y = (new Random()).nextInt(1000);
+        	int x = (new Random()).nextInt(lenght);
+        	int y = (new Random()).nextInt(height);
         	boolean uguale = true;
         	while(uguale){
         		uguale = false;
@@ -183,8 +184,8 @@ public class MobilityMap {
         			}
         		}
         		if(uguale){
-        			x = (new Random()).nextInt(2000);
-        			y = (new Random()).nextInt(1000);
+        			x = (new Random()).nextInt(lenght);
+        			y = (new Random()).nextInt(height);
         		}
         	}
         	n.setAttribute("xy", x, y);
@@ -227,9 +228,12 @@ public class MobilityMap {
          * i router di livello più basso
          */
         UpperLevelRouter ul = new UpperLevelRouter(s,"F"+id_frouter,1000,this);
-        Hexagon h = makeCluster(id_router, ul, 1, startX, startY);
+        Hexagon h = makeCluster(id_router, ul, 1, 0.0, 0.0);
+        //per ottenere la distanza di handoff utilizzando il raggio del cerchio
+        //che circoinscrive l'esagono
+        handoffDistance = calcHandoffDistance(h);
         r.add(routers.get("R"+id_router));
-        while(h.getC().getX() <= 2000){
+        while(h.getC().getX() <= lenght){
         	id_router++;
         	h = makeCluster(id_router, ul, h.getID(), h.getO().getX(), h.getO().getY());
             r.add(routers.get("R"+id_router));
@@ -241,15 +245,15 @@ public class MobilityMap {
         id_frouter++;
         
         int tempID = 2;
-        while(h.getA().getY()<= 1000){
+        while(h.getA().getY()<= height){
         	Node n = cityRoadMap.getNode("AB"+tempID);
         	Object by = ((Object[])n.getAttribute("xy"))[1];
         	double Oy = Double.parseDouble(""+by);
         	tempID = h.getID()+2;
         	id_router++;
         	ul = new UpperLevelRouter(s,"F"+id_frouter,1000,this);
-        	h = makeCluster(id_router, ul, h.getID()+1, startX, Oy);
-        	while(h.getC().getX() <= 2000){
+        	h = makeCluster(id_router, ul, h.getID()+1, 0.0, Oy);
+        	while(h.getC().getX() <= lenght){
         		id_router++;
         		h = makeCluster(id_router, ul, h.getID(), h.getO().getX(), h.getO().getY());
         	}
@@ -352,6 +356,20 @@ public class MobilityMap {
     	cityRoadMap.addNode(label);
     	cityRoadMap.getNode(label).setAttribute("xy", p.getX(), p.getY());
     }
+    
+    private double calcHandoffDistance(Hexagon h) {
+    	Point2D d = h.getD();
+    	Point2D a = h.getO();
+    	//centro dell'esagono adiacente a sud-est
+    	Point2D b = new Point2D.Double(d.getX()+radius, d.getY());
+    	double distance = Math.sqrt((b.getX()-a.getX())*(b.getX()-a.getX()) + (b.getY() - a.getY())*(b.getY() - a.getY()));
+    	
+    	return radius*2 - distance;
+    }
+    
+    public double getHandoffDistance() {
+    	return handoffDistance;
+    }
 
     public void addRouter(String id, Router r) {
     	routers.put(id, r);
@@ -367,6 +385,10 @@ public class MobilityMap {
 
     public Router getRouter(String id) {
     	return routers.get(id);
+    }
+    
+    public double getRadius() {
+    	return radius;
     }
     
     public void rimuoviMobileHost(String id_router, int id_mh) {

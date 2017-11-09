@@ -16,10 +16,8 @@ public class Router{
 	protected scheduler s;
 	protected MobilityMap map;
 	protected final String REFRESH = "check";
-	//50 millisecondi
-	protected final double ROUTE_TIMEOUT = 50.0;
-	//500 millisecondi
-	protected final double PAGING_TIMEOUT = 500.0;
+	protected double routeUpdateTime;
+	protected double pagingUpdateTime;
 	
 	protected HashMap<Integer,String> cache;
 	protected HashMap<Integer,Double> ttl;
@@ -46,7 +44,7 @@ public class Router{
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
 				//se il ttl e scaduto ed e attivo o non attivo
-				if(mh.eAttivo() && diff >= ROUTE_TIMEOUT || !(mh.eAttivo()) && diff >= PAGING_TIMEOUT) {
+				if(mh.eAttivo() && diff >= routeUpdateTime || !(mh.eAttivo()) && diff >= pagingUpdateTime) {
 					//aggiungi ai candidati per il refresh
 					removable.add(e.getKey());
 				}
@@ -63,7 +61,7 @@ public class Router{
 			/*
 			 * Periodo di refresh di 50 millisecondi
 			 */
-			m.shifta(ROUTE_TIMEOUT);
+			m.shifta(routeUpdateTime);
 			m.setDestinazione((Router)this);
             m.setSorgente((Router)this);
             s.insertMessage(m);
@@ -85,6 +83,14 @@ public class Router{
 	
 	public String getIdRouter() {
 		return id;
+	}
+	
+	public void setRouteUpdateTime(double time) {
+		routeUpdateTime = time;
+	}
+	
+	public void setPagingUpdateTime(double time) {
+		pagingUpdateTime = time;
 	}
 	
 	public synchronized void addMobileHost(int id_mh, String ip) {

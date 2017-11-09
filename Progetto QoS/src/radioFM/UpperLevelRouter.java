@@ -30,14 +30,14 @@ public class UpperLevelRouter extends Router {
 				double diff = now - e.getValue();
 				MobileHost mh = map.mobHost.get(e.getKey());
 				//se il ttl e scaduto
-				if(mh.eAttivo() && diff >= ROUTE_TIMEOUT) {
+				if(mh.eAttivo() && diff >= routeUpdateTime) {
 					//elimina la route dalle strutture dati
 					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
 					mh.notificaRiattesta();
 				}
 				//ttl scaduto e non e attivo il mobile host
-				if(!(mh.eAttivo()) && diff >= PAGING_TIMEOUT) {
+				if(!(mh.eAttivo()) && diff >= pagingUpdateTime) {
 					//elimina la route dalle strutture dati
 					removable.add(e.getKey());
 					//notifica il mobile host di riattestarsi
@@ -50,10 +50,8 @@ public class UpperLevelRouter extends Router {
 			}
 			removable.clear();
 			removable = null;
-			/*
-			 * Periodo di refresh di 50 millisecondi
-			 */
-			m.shifta(ROUTE_TIMEOUT);
+			
+			m.shifta(routeUpdateTime);
 			m.setDestinazione((Router)this);
             m.setSorgente((Router)this);
             s.insertMessage(m);

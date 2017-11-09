@@ -36,7 +36,8 @@ public class MobileHost extends nodo_host {
     final String INACTIVE = "inactive";
     //aggiornamento ogni secondo
     //si fa in modo che 1 secondo corrisponda a 100 secondi
-    final double UPDATE_POSITION_TIME = 1000.0; //UPDATE_POSITION_TIME
+    //50 secondi
+    final double UPDATE_POSITION_TIME = 500.0; //UPDATE_POSITION_TIME
     //stop al nodo 0 secondi
     final double STOP_WAITING_TIME = 0; //WAIT AT ROAD_CROSS
     String nodo_ingresso;
@@ -44,17 +45,16 @@ public class MobileHost extends nodo_host {
     int index_nodo_attuale;
     
     double avgSpeed;
+    private double minHandoff, maxHandoff;
     
-    //1s di handover
-    private final double HANDOVER_TIME = 1.0;
-    //20m di zona di sovrapposizione
-    private final double HANDOVER_DISTANCE = 0.02;
+    //zona di sovrapposizione
+    //private double handoffDistance;
     //numero di volte che il mh consegue un handover
     private int numHandover = 0;
     //espresso in Kbps
-    private final int AVG_RATE = 144;
+    private int avgRate;
     //espresso in KByte
-    private final int PACKET_SIZE = 1526;
+    private int packetSize;
     //stazione radio scelta dal mobile host
     private String ip;
     
@@ -62,11 +62,11 @@ public class MobileHost extends nodo_host {
     private boolean handover = false;
     //stato del mobile host
     private boolean attivo;
-    /*raggio di copertura della BaseStation
+    /*raggio di copertura della BS, esempio
      * 100.02 = 50.01 km *2
      * essendo la mappa in rapporto 1:2 (1 corrisponde a 0.5 km)
      */
-    private final double BS_RADIUS = 100.02;
+    //private final double BS_RADIUS = 100.02;
     //raggio del cerchio rappresentante questo mobile host = 0.5m
     private final double RADIUS = 0.001;
     //ID base station a cui il mh e attualmente registrato
@@ -136,6 +136,7 @@ public class MobileHost extends nodo_host {
     public void setMappa(MobilityMap mappa) {
         this.cityMap = mappa;
         this.mappa = mappa.cityRoadMap;
+        //handoffDistance = cityMap.getHandoffDistance();
     }
 
     public String getIp() {
@@ -148,6 +149,22 @@ public class MobileHost extends nodo_host {
 	
 	public boolean eAttivo() {
 		return attivo;
+	}
+	
+	public void setMinHandoff(double minHandoff) {
+		this.minHandoff = minHandoff;
+	}
+	
+	public void setMaxHandoff(double maxHandoff) {
+		this.maxHandoff = maxHandoff;
+	}
+	
+	public void setAvgRate(int avgRate) {
+		this.avgRate = avgRate;
+	}
+	
+	public void setPacketSize(int packetSize) {
+		this.packetSize = packetSize;
 	}
 
 	public void calcolaNuovaPosizione(Edge e, double x1, double y1, double x2, double y2) {
@@ -218,12 +235,12 @@ public class MobileHost extends nodo_host {
             currY = Double.parseDouble("" + y1);
             
             currDistance = 0;
-            //se il mobile host entra nell'area di copertura di un'altra base station
-            //allora notifica la sua presenza e il router lo registra
+            //il mobile host si attiva in una cella gestita da una BS
+            //quindi notifica la sua presenza e il MA gestore lo registra
             //verificaZonaHandover();
             if(verificaRiattestazione(true)) {
             	//non e necessario rimuovere informazioni dato che ancora non ce ne sono
-            	//route message
+            	//route update message
             	cityMap.riattesta(currBS, id_nodo, ip);
             	//System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
             	//riattesta
@@ -269,14 +286,13 @@ public class MobileHost extends nodo_host {
                     //allora notifica la sua presenza e il router lo registra
                     if(verificaRiattestazione(false)) {
                     	//si rimuovono le informazioni del mobile host dal router
-                    	//che gestisce la vecchia bs
+                    	//che gestisce la vecchia BS
                     	cityMap.rimuoviMobileHost(id_router, id_nodo);
                     	//ci si riattesta sulla nuova bs
-                    	//route message
+                    	//route update message
                     	cityMap.riattesta(currBS, id_nodo, ip);
-                		//metodo che, dato il tempo totale trascorso nella zona intermedia,
-                		//verifica se tale tempo rispetta il tempo di Handover. Se non lo rispetta
-                		//bisogna calcolare quanti pacchetti perde
+                		//metodo che verifica quanto tempo impiega la procedura di handoff
+                    	//e in base al tempo impiegato viene calcolata la perdita di pacchetti
                 		verificaTempo();
                     	//System.out.println("Riattestazione di "+id_nodo+" su "+id_router);
                     	//riattesta
@@ -318,8 +334,8 @@ public class MobileHost extends nodo_host {
                             }
                             double Tx = (s.orologio.getCurrent_Time() - tempo_inizio)/1000.0;
                             //System.out.println("tempo totale trasmissione = "+Tx);
-                            double bitrate = AVG_RATE*1000*Tx;
-                            double tot_pckts = bitrate/(PACKET_SIZE*8);
+                            double bitrate = avgRate*1000*Tx;
+                            double tot_pckts = bitrate/(packetSize*8);
                             //System.out.println("totale pacchetti persi = "+tot_pckts_loss);
                             //System.out.println("totale pacchetti trasmesi = "+tot_pckts);
                             double pr = tot_pckts_loss/tot_pckts;
@@ -391,7 +407,7 @@ public class MobileHost extends nodo_host {
     			double xDif = currX - bsX;
                 double yDif = currY - bsY;
                 double distanceSquared = xDif * xDif + yDif * yDif;
-                boolean collisione = distanceSquared <= (BS_RADIUS + RADIUS) * (BS_RADIUS + RADIUS);
+                boolean collisione = distanceSquared <= (cityMap.getRadius() + RADIUS) * (cityMap.getRadius() + RADIUS);
                 if(collisione) {
                 	nessunaCollisione = false;
                 }
@@ -401,7 +417,7 @@ public class MobileHost extends nodo_host {
                 	id_router = n.getAttribute("router");
                 	return true;
                 }
-                //Se trova un'altra base station ma si trova in una zona intermendia di handover
+                //Se trova un'altra base station ma si trova in una zona intermendia di handoff
                 //non restituisce nulla, questo perch� si sta gi� riattestando
                 else if(collisione && !handover) {
                 	//System.out.println("inizio handover");
@@ -438,25 +454,18 @@ public class MobileHost extends nodo_host {
     	 */
     	double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
     	System.out.println("velocita = "+realSpeed);
-    	double time = HANDOVER_DISTANCE/((realSpeed/3600.0));
-    	System.out.println("Tempo zona intermedia = "+time);
-    	double latenza_handover = HANDOVER_TIME - time;
-    	System.out.println("latenza = "+latenza_handover);
+    	double latenza_handoff = (new Random()).nextDouble()*(maxHandoff-minHandoff) + minHandoff;
+    	System.out.println("latenza = "+latenza_handoff);
     	//si aggiorna la latenza totale
-    	latenza += time;
+    	latenza += latenza_handoff;
     	System.out.println("latenza totale = "+latenza);
-		//se lo scarto e positivo allora il tempo nella zona intermedia
-    	//e inferiore rispetto al tempo richiesto dall'handover, ne consegue
-    	//che ci sara una perdita di pacchetti.
-    	if(latenza_handover > 0) {
-    		//espresso in bit
-    		double bitrate_loss = AVG_RATE*1000*latenza_handover;
-    		System.out.println("bitrate = "+bitrate_loss);
-    		int pckts_loss = (int) bitrate_loss/(PACKET_SIZE*8);
-    		System.out.println("pacchetti persi = "+pckts_loss);
-    		numPerdite++;
-    		tot_pckts_loss+= pckts_loss;
-    	}
+    	//espresso in bit
+    	double bitrate_loss = avgRate*1000*latenza_handoff;
+    	System.out.println("bitrate = "+bitrate_loss);
+    	int pckts_loss = (int) bitrate_loss/(packetSize*8);
+    	System.out.println("pacchetti persi = "+pckts_loss);
+    	numPerdite++;
+    	tot_pckts_loss+= pckts_loss;
     }
     
     public void notificaRiattesta() {

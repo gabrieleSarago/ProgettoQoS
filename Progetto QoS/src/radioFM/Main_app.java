@@ -34,13 +34,15 @@ public class Main_app {
 
     private static void init_sim_parameters() {
         //Tempo simulazione = 600 secondi
-    	s = new scheduler(1200000, false);
+    	s = new scheduler(600000, false);
     }
     
     /**
      * Creates new form main_app
      */
     public Main_app() {
+    	//TODO JFrame
+    	
     	File conf_file = new File("src/conf.xml");
         if (conf_file.exists()) {
             startParsing(conf_file);
@@ -104,17 +106,39 @@ public class Main_app {
         //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
         double maxSpeed = 11.2;
         double minSpeed = 3.0;
-    	
-        roadMap = new MobilityMap(s, radius, startX, startY, numNodi, minSpeed, maxSpeed);
+        //espressi in secondi
+        double minHandoff = 0.0;
+        double maxHandoff = 0.09;
+    	int avgRate = 144;
+    	int packetSize = 1526;
+    	//mobile host
+        int numMobHost = 10;
+        double generationRate = 2.0;
+        //MA
+        //espressi in ms
+    	double routeUpdateTime = 50.0;
+    	double pagingUpdateTime = 500.0;
+    	//capacita MA
+    	int cap = 0;
+    	//mappa
+    	int lenght = 2000;
+    	int height = 1000;
+        roadMap = new MobilityMap(s, radius, lenght, height, numNodi, minSpeed, maxSpeed);
         //Avvio dei router
         for(Entry<String, Router> e : roadMap.routers.entrySet()){
+        	e.getValue().setRouteUpdateTime(routeUpdateTime);
+        	e.getValue().setPagingUpdateTime(pagingUpdateTime);
         	e.getValue().start();
         }
         //Avvio dei router di primo livello
         for(Entry<String, UpperLevelRouter> e : roadMap.ul_routers.entrySet()){
+        	e.getValue().setRouteUpdateTime(routeUpdateTime);
+        	e.getValue().setPagingUpdateTime(pagingUpdateTime);
         	e.getValue().start();
         }
         //avvio del gateway
+        roadMap.getGateway().setRouteUpdateTime(routeUpdateTime);
+        roadMap.getGateway().setPagingUpdateTime(pagingUpdateTime);
         roadMap.getGateway().start();
         
         SAXBuilder saxBuilder = new SAXBuilder();
@@ -153,7 +177,11 @@ public class Main_app {
             int lastNodeId = 1000;
             int idCanale = 1;
             int counterNodeId = 1;
-            int numMobHost = 10;
+            
+            double exitGateAt = 0.0;
+            int gateway = 0;
+            int showUI = 0;
+            double interExitTime = 60000.0 / generationRate;
             for (int j = 0; j < numMobHost; j++) {
             	Random r = new Random();
                 String nodo_ingresso = "" + r.nextInt(numNodi);
@@ -161,52 +189,46 @@ public class Main_app {
                 while(nodo_ingresso.equals(nodo_uscita)){
                 	nodo_uscita =  "" + r.nextInt(numNodi);
                 }
-                double exitGateAt = 0.0;
-                double generationRate = 2.0;
-                double maxVehicles = 10.0;
-                int gateway = 0;
-                int showUI = 0;
+                
+                int id = lastNodeId + counterNodeId;
+                counterNodeId++;
 
-                double interExitTime = 60000.0 / generationRate;
+                //Grafo grafo = new Grafo(5);
 
-                for (int vehicleCounter = 0; vehicleCounter < maxVehicles; vehicleCounter++) {
+                Physical80211P pl = new Physical80211P(s, 0.0);
+                LinkLayer ll = new LinkLayer(s, 5.0);
+                waveNetLayer nl = new waveNetLayer(s, 5.0,/*grafo*/ null,showUI);
+                waveFSCTPTransportLayer tl = new waveFSCTPTransportLayer(s, 5.0);
 
-                    int id = lastNodeId + counterNodeId;
-                    counterNodeId++;
-                    
-                    //Grafo grafo = new Grafo(5);
-                    
-                    Physical80211P pl = new Physical80211P(s, 0.0);
-                    LinkLayer ll = new LinkLayer(s, 5.0);
-                    waveNetLayer nl = new waveNetLayer(s, 5.0,/*grafo*/ null,showUI);
-                    waveFSCTPTransportLayer tl = new waveFSCTPTransportLayer(s, 5.0);
-                    
-                    //previsto dato da inserire
-                    MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, null);
-                    
-                    nh.setMappa(roadMap);
-                    nh.setNodo_ingresso(nodo_ingresso);
-                    nh.setNodo_uscita(nodo_uscita);
-                    nh.setExitFromGate(exitGateAt);
-                    Mh_node car = new Mh_node(id, 0, 0);
-                    roadMap.mobile_hosts.put("" + id, car);
-                    roadMap.mobHost.put(id, nh);
+                //previsto dato da inserire
+                MobileHost nh = new MobileHost(s, id, pl, ll, nl, tl, null, "nodo_host", gateway, null);
 
-                    canale c = new canale(s, idCanale,
-                            info.getCanale(0).returnCapacita(),
-                            info.getCanale(0).getDimensione_pacchetto(),
-                            info.getCanale(0).getTempo_di_propagazione());
-                    info.addCanale(c);
-                    idCanale++;
+                nh.setMappa(roadMap);
+                nh.setNodo_ingresso(nodo_ingresso);
+                nh.setNodo_uscita(nodo_uscita);
+                nh.setMinHandoff(minHandoff);
+                nh.setMaxHandoff(maxHandoff);
+                nh.setAvgRate(avgRate);
+                nh.setPacketSize(packetSize);
+                nh.setExitFromGate(exitGateAt);
+                Mh_node car = new Mh_node(id, 0, 0);
+                roadMap.mobile_hosts.put("" + id, car);
+                roadMap.mobHost.put(id, nh);
 
-                    nh.setMy_wireless_channel(c);
+                canale c = new canale(s, idCanale,
+                		info.getCanale(0).returnCapacita(),
+                		info.getCanale(0).getDimensione_pacchetto(),
+                		info.getCanale(0).getTempo_di_propagazione());
+                info.addCanale(c);
+                idCanale++;
 
-                    nl.setDefaultGateway(gateway);
+                nh.setMy_wireless_channel(c);
 
-                    //Aggiorno il tempo di uscita del prossimo veicolo
-                    exitGateAt += interExitTime;
-                    info.addNodo(nh);
-                }
+                nl.setDefaultGateway(gateway);
+
+                //Aggiorno il tempo di uscita del prossimo veicolo
+                exitGateAt += interExitTime;
+                info.addNodo(nh);
             }
 
             /*listElement = rootElement.getChildren("router");

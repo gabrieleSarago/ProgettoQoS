@@ -1,9 +1,13 @@
-/utils/
+/Mobility/
 /base_simulator/
+/conf.xml
 /filter/
+/log4j.properties_OLD
+/log4j.xml
 /radioFM/
 /reti_tlc_gruppo_0/
 /reti_tlc_gruppo_DV/
+/simplelogger.properties__OLD
 /standardNetwork/
 /tests/
-/Mobility/
+/utils/
