@@ -12,7 +12,7 @@ public class Router{
 	
 	private String id;
 	private int capacita, capacita_paging;
-	private int numConnessioni = 0;
+	private int carico = 0;
 	protected scheduler s;
 	protected MobilityMap map;
 	protected final String REFRESH = "check";
@@ -24,12 +24,12 @@ public class Router{
 	
 	protected Router uplink;
 	
-	public Router(scheduler s, String id, int capacita, MobilityMap m) {
+	public Router(scheduler s, String id, int capacita, double pPaging, MobilityMap m) {
 		this.s = s;
 		this.id = id;
 		this.capacita = capacita;
 		//10% di capacita destinata al paging
-		capacita_paging = (int) 0.1*capacita;
+		capacita_paging = (int) pPaging*capacita;
 		this.map = m;
 		cache = new HashMap<>();
 		ttl = new HashMap<>();
@@ -94,8 +94,9 @@ public class Router{
 	}
 	
 	public synchronized void addMobileHost(int id_mh, String ip) {
-		if(numConnessioni < capacita) {
-			numConnessioni++;
+		if(carico < capacita) {
+			MobileHost mh = map.mobHost.get(id_mh);
+			carico += mh.getAvgRate();
 		}
 		//capacita raggiunta, si eliminano le info dei mobile host inattivi per fare spazio
 		else if(capacita_paging > 0){
@@ -120,7 +121,7 @@ public class Router{
 				if(uplink != null) {
 					uplink.removeMobileHost(id);
 				}
-				capacita_paging--;
+				capacita_paging -= map.mobHost.get(id).getAvgRate();
 			}
 		}
 		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);
@@ -138,7 +139,7 @@ public class Router{
 		if(uplink != null) {
 			uplink.removeMobileHost(id_mh);
 		}
-		numConnessioni--;
+		carico -= map.mobHost.get(id_mh).getAvgRate();
 	}
 	
 	public void start() {

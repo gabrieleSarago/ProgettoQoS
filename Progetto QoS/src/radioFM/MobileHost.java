@@ -163,6 +163,10 @@ public class MobileHost extends nodo_host {
 		this.avgRate = avgRate;
 	}
 	
+	public int getAvgRate() {
+		return avgRate;
+	}
+	
 	public void setPacketSize(int packetSize) {
 		this.packetSize = packetSize;
 	}

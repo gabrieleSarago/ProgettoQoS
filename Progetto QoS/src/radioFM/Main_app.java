@@ -112,6 +112,7 @@ public class Main_app {
     	//capacita GMA
     	int capacitaGMA = frame.capacitaGMA;
     	int capacitaMA = frame.capacitaMA;
+    	double pPaging = frame.pPaging;
     	//mappa
     	int width = frame.width;
     	int height = frame.height;
@@ -141,7 +142,7 @@ public class Main_app {
     	//mappa
     	int lenght = 2000;
     	int height = 1000;*/
-        roadMap = new MobilityMap(s, radius, width, height, numNodi, minSpeed, maxSpeed);
+        roadMap = new MobilityMap(s, radius, width, height, numNodi, minSpeed, maxSpeed, capacitaGMA, capacitaMA, pPaging);
         //Avvio dei router
         for(Entry<String, Router> e : roadMap.routers.entrySet()){
         	e.getValue().setRouteUpdateTime(routeUpdateTime);

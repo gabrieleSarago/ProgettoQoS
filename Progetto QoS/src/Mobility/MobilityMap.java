@@ -51,9 +51,10 @@ public class MobilityMap {
     private int height;
     private int numNodi;
     private double minSpeed, maxSpeed;
-    private double handoffDistance;
+    private double handoffDistance, pPaging;
+    private int capacitaGMA, capacitaMA;
 
-    public MobilityMap(scheduler s, double radius, int lenght, int height, int numNodi, double minSpeed, double maxSpeed) {
+    public MobilityMap(scheduler s, double radius, int lenght, int height, int numNodi, double minSpeed, double maxSpeed, int capacitaGMA, int capacitaMA, double pPaging) {
     	this.s = s;
     	this.radius = radius;
     	this.lenght = lenght;
@@ -61,6 +62,9 @@ public class MobilityMap {
     	this.numNodi = numNodi;
     	this.minSpeed = minSpeed;
     	this.maxSpeed = maxSpeed;
+    	this.capacitaGMA = capacitaGMA;
+    	this.capacitaMA = capacitaMA;
+    	this.pPaging = pPaging;
     	
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
@@ -209,7 +213,7 @@ public class MobilityMap {
         //cityRoadMap.addNode("1").addAttribute("ui.hide");
         
         //Router Gateway
-        gateway = new UpperLevelRouter(s, "C1", 1000000, this);
+        gateway = new UpperLevelRouter(s, "C1", capacitaGMA, pPaging, this);
         //lista di router da aggiungere ai router di primo livello
         LinkedList<Router> r = new LinkedList<>();
         //lista di router di primo livello da aggiungere al gateway
@@ -227,7 +231,7 @@ public class MobilityMap {
          * I router di I livello gestiscono un insieme di Cluster tramite
          * i router di livello più basso
          */
-        UpperLevelRouter ul = new UpperLevelRouter(s,"F"+id_frouter,1000,this);
+        UpperLevelRouter ul = new UpperLevelRouter(s,"F"+id_frouter,capacitaMA*4, pPaging, this);
         Hexagon h = makeCluster(id_router, ul, 1, 0.0, 0.0);
         //per ottenere la distanza di handoff utilizzando il raggio del cerchio
         //che circoinscrive l'esagono
@@ -251,7 +255,7 @@ public class MobilityMap {
         	double Oy = Double.parseDouble(""+by);
         	tempID = h.getID()+2;
         	id_router++;
-        	ul = new UpperLevelRouter(s,"F"+id_frouter,1000,this);
+        	ul = new UpperLevelRouter(s,"F"+id_frouter,capacitaMA*4, pPaging,this);
         	h = makeCluster(id_router, ul, h.getID()+1, 0.0, Oy);
         	while(h.getC().getX() <= lenght){
         		id_router++;
@@ -331,7 +335,7 @@ public class MobilityMap {
     }
     
     private Hexagon makeCluster(int id_router, UpperLevelRouter ul, int id, double x, double y){
-    	Router r = new Router(s, "R"+id_router, 100, this);
+    	Router r = new Router(s, "R"+id_router, capacitaMA, pPaging, this);
     	r.setUplink(ul);
     	//Si salva il primo esagono creato, che servirà per creare
     	//i due esagoni successivi

@@ -23,8 +23,8 @@ public class SettingsWindow extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = -7088089716177834916L;
 	
-	public double radius, speedMax, speedMin, maxTimeHandoff, minTimeHandoff, routeUpdateTime, pagingUpdateTime;
-	public int numNodi, numMH, rate, avgRate, pSize,capacitaGMA, capacitaMA, pPaging, width, height;
+	public double radius, speedMax, speedMin, maxTimeHandoff, minTimeHandoff, routeUpdateTime, pagingUpdateTime, pPaging;
+	public int numNodi, numMH, rate, avgRate, pSize,capacitaGMA, capacitaMA, width, height;
 	private JTextField raggio, larghezza, altezza, nodiTraffico, v_max, v_min, pg, cg, ru, pu, m, ra, c, t_max,t_min, avg, ps;
 
 	public SettingsWindow() {
@@ -222,7 +222,7 @@ public class SettingsWindow extends JFrame implements ActionListener{
 			this.rate = Integer.parseInt(ra.getText());
 			this.capacitaGMA = Integer.parseInt(cg.getText());
 			this.capacitaMA = Integer.parseInt(c.getText());
-			this.pPaging = Integer.parseInt(pg.getText());
+			this.pPaging = Double.parseDouble(pg.getText());
 			this.maxTimeHandoff = Double.parseDouble(t_max.getText());
 			this.minTimeHandoff = Double.parseDouble(t_min.getText());
 			this.pSize = Integer.parseInt(ps.getText());
@@ -241,7 +241,6 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		li.add(rate);
 		li.add(capacitaGMA);
 		li.add(capacitaMA);
-		li.add(pPaging);
 		li.add(pSize);
 		
 		ld.add(radius);
@@ -250,6 +249,7 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		ld.add(maxTimeHandoff);
 		ld.add(minTimeHandoff);
 		ld.add(routeUpdateTime);
+		ld.add(pPaging);
 		ld.add(pagingUpdateTime);
 		
 		for(int i : li) {

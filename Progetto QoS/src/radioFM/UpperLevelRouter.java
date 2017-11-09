@@ -17,8 +17,8 @@ public class UpperLevelRouter extends Router {
 	
 	private LinkedList<Router> downlink_routers;
 	
-	public UpperLevelRouter(scheduler s,String id, int capacita, MobilityMap m) {
-		super(s, id, capacita, m);
+	public UpperLevelRouter(scheduler s,String id, int capacita, double pPaging, MobilityMap m) {
+		super(s, id, capacita, pPaging, m);
 	}
 	
 	public void Handler(Messaggi m){
