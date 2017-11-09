@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -31,6 +34,7 @@ import base_simulator.layers.LinkLayer;
 public class Main_app {
 	
 	private static scheduler s;
+	private static SettingsWindow frame;
 
     private static void init_sim_parameters() {
         //Tempo simulazione = 600 secondi
@@ -41,11 +45,9 @@ public class Main_app {
      * Creates new form main_app
      */
     public Main_app() {
-    	//TODO JFrame
-    	
     	File conf_file = new File("src/conf.xml");
         if (conf_file.exists()) {
-            startParsing(conf_file);
+            startSimulation(conf_file);
         } else {
             System.out.println("File non esistente");
         }
@@ -63,31 +65,22 @@ public class Main_app {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main_app.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main_app.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main_app.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main_app.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+    	try {
+    	    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+    	        if ("Nimbus".equals(info.getName())) {
+    	            UIManager.setLookAndFeel(info.getClassName());
+    	            break;
+    	        }
+    	    }
+    	} catch (Exception e) {
+    	    // If Nimbus is not available, you can set the GUI to another look and feel.
+    	}
+       
         //</editor-fold>
         init_sim_parameters();
+        
+        frame = new SettingsWindow();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main_app();
-            }
-        });
     }
 
     private Infos info = new Infos();
@@ -95,10 +88,35 @@ public class Main_app {
     MobilityMap roadMap;
 
     @SuppressWarnings("rawtypes")
-	private boolean startParsing(File xmlFile) {
-    	double radius = 100.02;
-        double startX = 0.0;
-        double startY = 0.0;
+	private boolean startSimulation(File xmlFile) {
+    	double radius = frame.radius;
+        int numNodi = frame.numNodi;
+        //3.0 => 1.5 km/100 sec => 54 km/h
+        //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
+        //11.2 => 5.6 km/100 sec => circa 200 km/h
+        //5.6 => 2.8 km/100 sec = > circa 100 km/h => 5 pacchetti persi
+        double maxSpeed = frame.speedMax;
+        double minSpeed = frame.speedMin;
+        //espressi in secondi
+        double minHandoff = frame.minTimeHandoff;
+        double maxHandoff = frame.maxTimeHandoff;
+    	int avgRate = frame.avgRate;
+    	int packetSize = frame.pSize;
+    	//mobile host
+        int numMobHost = frame.numMH;
+        int generationRate = frame.rate;
+        //MA
+        //espressi in ms
+    	double routeUpdateTime = frame.routeUpdateTime;
+    	double pagingUpdateTime = frame.pagingUpdateTime;
+    	//capacita GMA
+    	int capacitaGMA = frame.capacitaGMA;
+    	int capacitaMA = frame.capacitaMA;
+    	//mappa
+    	int width = frame.width;
+    	int height = frame.height;
+    	
+    	/*double radius = 100.02;
         int numNodi = 10;
         //3.0 => 1.5 km/100 sec => 54 km/h
         //5.0 => 2.5 km/100 sec => 90 km/h => 2 pacchetti persi
@@ -122,8 +140,8 @@ public class Main_app {
     	int cap = 0;
     	//mappa
     	int lenght = 2000;
-    	int height = 1000;
-        roadMap = new MobilityMap(s, radius, lenght, height, numNodi, minSpeed, maxSpeed);
+    	int height = 1000;*/
+        roadMap = new MobilityMap(s, radius, width, height, numNodi, minSpeed, maxSpeed);
         //Avvio dei router
         for(Entry<String, Router> e : roadMap.routers.entrySet()){
         	e.getValue().setRouteUpdateTime(routeUpdateTime);
