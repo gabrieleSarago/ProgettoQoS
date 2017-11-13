@@ -37,8 +37,8 @@ public class Main_app {
 	private static SettingsWindow frame;
 
     private static void init_sim_parameters() {
-        //Tempo simulazione = 600 secondi
-    	s = new scheduler(600000, false);
+        //Tempo simulazione = 1200 secondi
+    	s = new scheduler(1200000, false);
     }
     
     /**
@@ -147,13 +147,13 @@ public class Main_app {
     	int height = 1000;*/
         roadMap = new MobilityMap(s, radius, width, height, numNodi, minSpeed, maxSpeed, capacitaGMA, capacitaMA, pPaging);
         //Avvio dei router
-        for(Entry<String, MA> e : roadMap.mobility_agents.entrySet()){
+        for(Entry<String, MobilityAgent> e : roadMap.mobility_agents.entrySet()){
         	e.getValue().setRouteTimeout(routeUpdateTime);
         	e.getValue().setPagingTimeout(pagingUpdateTime);
         	e.getValue().start();
         }
         //Avvio dei router di primo livello
-        for(Entry<String, UpperLevelMA> e : roadMap.ul_mobility_agents.entrySet()){
+        for(Entry<String, UpperLevelMobilityAgent> e : roadMap.ul_mobility_agents.entrySet()){
         	e.getValue().setRouteTimeout(routeUpdateTime);
         	e.getValue().setPagingTimeout(pagingUpdateTime);
         	e.getValue().start();

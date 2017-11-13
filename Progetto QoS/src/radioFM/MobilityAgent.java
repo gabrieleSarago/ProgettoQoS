@@ -8,10 +8,10 @@ import Mobility.MobilityMap;
 import base_simulator.Messaggi;
 import base_simulator.scheduler;
 
-public class MA{
+public class MobilityAgent{
 	
 	private String id;
-	private int capacita, capacita_paging;
+	private int capacita, capacitaPaging;
 	private int carico = 0;
 	protected scheduler s;
 	protected MobilityMap map;
@@ -22,14 +22,14 @@ public class MA{
 	protected HashMap<Integer,String> cache;
 	protected HashMap<Integer,Double> ttl;
 	
-	protected MA uplink;
+	protected MobilityAgent uplink;
 	
-	public MA(scheduler s, String id, int capacita, double pPaging, MobilityMap m) {
+	public MobilityAgent(scheduler s, String id, int capacita, double pPaging, MobilityMap m) {
 		this.s = s;
 		this.id = id;
 		this.capacita = capacita;
 		//10% di capacita destinata al paging
-		capacita_paging = (int) pPaging*capacita;
+		capacitaPaging = (int) pPaging*capacita;
 		this.map = m;
 		cache = new HashMap<>();
 		ttl = new HashMap<>();
@@ -59,12 +59,9 @@ public class MA{
 			}
 			removable.clear();
 			removable = null;
-			/*
-			 * Periodo di refresh di 50 millisecondi
-			 */
 			m.shifta(routeTimeout);
-			m.setDestinazione((MA)this);
-            m.setSorgente((MA)this);
+			m.setDestinazione((MobilityAgent)this);
+            m.setSorgente((MobilityAgent)this);
             s.insertMessage(m);
 		}
 
@@ -78,7 +75,7 @@ public class MA{
 		return ttl;
 	}
 	
-	public void setUplink(MA uplink) {
+	public void setUplink(MobilityAgent uplink) {
 		this.uplink = uplink;
 	}
 	
@@ -100,7 +97,7 @@ public class MA{
 			carico += mh.getAvgRate();
 		}
 		//capacita raggiunta, si eliminano le info dei mobile host inattivi per fare spazio
-		else if(capacita_paging > 0){
+		else if(capacitaPaging > 0){
 			//id mobile host candidato a essere rimosso
 			int id = -1;
 			//il primo mh inattivo viene rimosso
@@ -122,7 +119,7 @@ public class MA{
 				if(uplink != null) {
 					uplink.removeMobileHost(id);
 				}
-				capacita_paging -= map.mobHost.get(id).getAvgRate();
+				capacitaPaging -= map.mobHost.get(id).getAvgRate();
 			}
 		}
 		//System.out.println("Router = "+this.id+" Aggiunta mobile host = "+id_mh);

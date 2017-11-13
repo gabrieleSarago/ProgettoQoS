@@ -449,8 +449,8 @@ public class MobileHost extends nodo_host {
     	 * 5.0/2.0/100.0 = 0.025km/s
     	 * 0.025*3600.0 = 90km/h
     	 */
-    	double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
-    	System.out.println("velocita = "+realSpeed);
+    	//double realSpeed = ((avgSpeed/2.0)/100.0)*3600.0;
+    	//System.out.println("velocita = "+realSpeed);
     	double latenza_handoff = (new Random()).nextDouble()*(maxHandoff-minHandoff) + minHandoff;
     	System.out.println("latenza = "+latenza_handoff);
     	//si aggiorna la latenza totale

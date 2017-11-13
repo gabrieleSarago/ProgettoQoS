@@ -22,8 +22,8 @@ import org.graphstream.ui.view.Viewer;
 
 import base_simulator.scheduler;
 import radioFM.MobileHost;
-import radioFM.MA;
-import radioFM.UpperLevelMA;
+import radioFM.MobilityAgent;
+import radioFM.UpperLevelMobilityAgent;
 import utils.Hexagon;
 
 /**
@@ -36,11 +36,11 @@ public class MobilityMap {
     public HashMap<String, Mh_node> mobile_hosts = new HashMap<String, Mh_node>();
     public HashMap<Integer, MobileHost> mobHost = new HashMap<>();
     //associazione id_router - oggetto Router
-    public HashMap<String, MA> mobility_agents = new HashMap<>();
+    public HashMap<String, MobilityAgent> mobility_agents = new HashMap<>();
     //struttura dati che contiene router di primo livello e gateway router
-    public HashMap<String, UpperLevelMA> ul_mobility_agents = new HashMap<>();
+    public HashMap<String, UpperLevelMobilityAgent> ul_mobility_agents = new HashMap<>();
     //router gateway
-    private UpperLevelMA gateway;
+    private UpperLevelMobilityAgent gateway;
     
     private scheduler s;
     
@@ -121,7 +121,7 @@ public class MobilityMap {
 
     }
     
-    public UpperLevelMA getGateway(){
+    public UpperLevelMobilityAgent getGateway(){
     	return gateway;
     }
     
@@ -193,6 +193,7 @@ public class MobilityMap {
         		}
         	}
         	n.setAttribute("xy", x, y);
+        	n.addAttribute("ui.hide");
         }
         
         //aggiunta dei pesi agli archi
@@ -201,6 +202,7 @@ public class MobilityMap {
         	Node n1 = e.getNode1();
         	int lenght = getEdgeLenght(n0, n1);
         	e.addAttribute("lenght", lenght);
+        	e.addAttribute("ui.hide");
         	//velocità in un certo range di valori
         	double speed = (new Random()).nextDouble()*(maxSpeed-minSpeed)+minSpeed;
         	e.addAttribute("avgSpeed", speed);
@@ -213,11 +215,11 @@ public class MobilityMap {
         //cityRoadMap.addNode("1").addAttribute("ui.hide");
         
         //Router Gateway
-        gateway = new UpperLevelMA(s, "C1", capacitaGMA, pPaging, this);
+        gateway = new UpperLevelMobilityAgent(s, "C1", capacitaGMA, pPaging, this);
         //lista di router da aggiungere ai router di primo livello
-        LinkedList<MA> r = new LinkedList<>();
+        LinkedList<MobilityAgent> r = new LinkedList<>();
         //lista di router di primo livello da aggiungere al gateway
-        LinkedList<MA> fr = new LinkedList<>();
+        LinkedList<MobilityAgent> fr = new LinkedList<>();
         //id router di primo livello
         int id_frouter = 1;
         //id router gestori di BS
@@ -231,7 +233,7 @@ public class MobilityMap {
          * I router di I livello gestiscono un insieme di Cluster tramite
          * i router di livello più basso
          */
-        UpperLevelMA ul = new UpperLevelMA(s,"F"+id_frouter,capacitaMA*4, pPaging, this);
+        UpperLevelMobilityAgent ul = new UpperLevelMobilityAgent(s,"F"+id_frouter,capacitaMA*4, pPaging, this);
         Hexagon h = makeCluster(id_router, ul, 1, 0.0, 0.0);
         //per ottenere la distanza di handoff utilizzando il raggio del cerchio
         //che circoinscrive l'esagono
@@ -242,7 +244,7 @@ public class MobilityMap {
         	h = makeCluster(id_router, ul, h.getID(), h.getO().getX(), h.getO().getY());
             r.add(mobility_agents.get("R"+id_router));
         }
-        ul.addRouters(r);
+        ul.addMobilityAgents(r);
         ul_mobility_agents.put("F"+id_frouter, ul);
         ul.setUplink(gateway);
         fr.add(ul);
@@ -255,20 +257,20 @@ public class MobilityMap {
         	double Oy = Double.parseDouble(""+by);
         	tempID = h.getID()+2;
         	id_router++;
-        	ul = new UpperLevelMA(s,"F"+id_frouter,capacitaMA*4, pPaging,this);
+        	ul = new UpperLevelMobilityAgent(s,"F"+id_frouter,capacitaMA*4, pPaging,this);
         	h = makeCluster(id_router, ul, h.getID()+1, 0.0, Oy);
         	while(h.getC().getX() <= lenght){
         		id_router++;
         		h = makeCluster(id_router, ul, h.getID(), h.getO().getX(), h.getO().getY());
         	}
-            ul.addRouters(r);
+            ul.addMobilityAgents(r);
             ul_mobility_agents.put("F"+id_frouter, ul);
             ul.setUplink(gateway);
             fr.add(ul);
             id_frouter++;
         }
         //in questo modo il gateway gestisce i router di primo livello
-        gateway.addRouters(fr);
+        gateway.addMobilityAgents(fr);
         
         //per colorare un arco
         //cityRoadMap.getEdge("AI").addAttribute("ui.style", "fill-color: red;");
@@ -334,8 +336,8 @@ public class MobilityMap {
         return h;
     }
     
-    private Hexagon makeCluster(int id_router, UpperLevelMA ul, int id, double x, double y){
-    	MA r = new MA(s, "R"+id_router, capacitaMA, pPaging, this);
+    private Hexagon makeCluster(int id_router, UpperLevelMobilityAgent ul, int id, double x, double y){
+    	MobilityAgent r = new MobilityAgent(s, "R"+id_router, capacitaMA, pPaging, this);
     	r.setUplink(ul);
     	//Si salva il primo esagono creato, che servirà per creare
     	//i due esagoni successivi
@@ -375,19 +377,19 @@ public class MobilityMap {
     	return handoffDistance;
     }
 
-    public void addRouter(String id, MA r) {
+    public void addRouter(String id, MobilityAgent r) {
     	mobility_agents.put(id, r);
     }
     
-    public void addFirstRouter(String id, UpperLevelMA ur) {
+    public void addFirstRouter(String id, UpperLevelMobilityAgent ur) {
     	ul_mobility_agents.put(id, ur);
     }
     
-    public UpperLevelMA getFirstRouter(String id) {
+    public UpperLevelMobilityAgent getFirstRouter(String id) {
     	return ul_mobility_agents.get(id);
     }
 
-    public MA getRouter(String id) {
+    public MobilityAgent getRouter(String id) {
     	return mobility_agents.get(id);
     }
     
@@ -396,7 +398,7 @@ public class MobilityMap {
     }
     
     public void rimuoviMobileHost(String id_router, int id_mh) {
-    	MA r = mobility_agents.get(id_router);
+    	MobilityAgent r = mobility_agents.get(id_router);
     	r.removeMobileHost(id_mh);
     }
     
@@ -405,7 +407,7 @@ public class MobilityMap {
     public void riattesta(String bs, int id_mh, String ip) {
     	Node n = cityRoadMap.getNode(bs);
     	String id_router = n.getAttribute("router");
-    	MA r = mobility_agents.get(id_router);
+    	MobilityAgent r = mobility_agents.get(id_router);
     	//TODO interrogare il router in modo da ottenere l'ip
     	//allo stato attuale il simulatore non � provvisto di indirizzamento IP
     	r.addMobileHost(id_mh, ip);

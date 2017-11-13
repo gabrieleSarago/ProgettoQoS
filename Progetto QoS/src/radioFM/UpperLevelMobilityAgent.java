@@ -13,11 +13,11 @@ import base_simulator.scheduler;
  *
  */
 
-public class UpperLevelMA extends MA {
+public class UpperLevelMobilityAgent extends MobilityAgent {
 	
-	private LinkedList<MA> downlink_routers;
+	private LinkedList<MobilityAgent> downlink_routers;
 	
-	public UpperLevelMA(scheduler s,String id, int capacita, double pPaging, MobilityMap m) {
+	public UpperLevelMobilityAgent(scheduler s,String id, int capacita, double pPaging, MobilityMap m) {
 		super(s, id, capacita, pPaging, m);
 	}
 	
@@ -52,20 +52,20 @@ public class UpperLevelMA extends MA {
 			removable = null;
 			
 			m.shifta(routeTimeout);
-			m.setDestinazione((MA)this);
-            m.setSorgente((MA)this);
+			m.setDestinazione((MobilityAgent)this);
+            m.setSorgente((MobilityAgent)this);
             s.insertMessage(m);
 		}
 
 	}
 	
-	public synchronized void addRouters(LinkedList<MA> down) {
+	public synchronized void addMobilityAgents(LinkedList<MobilityAgent> down) {
 		downlink_routers = down;
 		/*
 		 * vengono salvati i record dei router downlink
 		 * in modo da stabilire la connessione
 		 */
-		for(MA r : downlink_routers) {
+		for(MobilityAgent r : downlink_routers) {
 			cache.putAll(r.getCache());
 			ttl.putAll(r.getTtl());
 		}

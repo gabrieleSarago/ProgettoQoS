@@ -29,6 +29,7 @@ public class SettingsWindow extends JFrame implements ActionListener{
 
 	public SettingsWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Simulatore");
 		createFrame();
 	}
 	
@@ -38,21 +39,21 @@ public class SettingsWindow extends JFrame implements ActionListener{
 		//Mappa
 		JPanel mappa = new JPanel(new SpringLayout());
 		
-		JLabel r = new JLabel("Raggio (in metri)", JLabel.TRAILING);
+		JLabel r = new JLabel("Raggio (in km)", JLabel.TRAILING);
 		raggio = new JTextField();
 		raggio.setMaximumSize(new Dimension(width, 20));
 		r.setLabelFor(raggio);
 		mappa.add(r);
 		mappa.add(raggio);
 		
-		JLabel l = new JLabel("Larghezza (in metri)", JLabel.TRAILING);
+		JLabel l = new JLabel("Larghezza (in km)", JLabel.TRAILING);
 		larghezza = new JTextField();
 		larghezza.setMaximumSize(new Dimension(width, 20));
 		l.setLabelFor(larghezza);
 		mappa.add(l);
 		mappa.add(larghezza);
 		
-		JLabel a = new JLabel("Altezza (in metri)", JLabel.TRAILING);
+		JLabel a = new JLabel("Lunghezza (in km)", JLabel.TRAILING);
 		altezza = new JTextField();
 		altezza.setMaximumSize(new Dimension(width, 20));
 		a.setLabelFor(altezza);
